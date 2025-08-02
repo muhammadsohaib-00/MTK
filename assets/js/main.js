@@ -164,7 +164,7 @@
                     scrollTop: target.offset().top - 10
                     }, 1000);
                 };
-    
+
                 });
             });
             })
@@ -596,21 +596,21 @@
     //     $('.th-accordion_images img').eq(activeIndex).addClass('active');
     //     $('.th-accordion_images img').mouseenter('hover');
     //     $('.th-accordion_images img').eq(activeIndex).addClass('hover');
-       
+
     // });  
-   
+
 
      // Show the first tab and hide the rest
      $('.accordion-item-wrapp li:first-child').addClass('active');
      $('.according-img-tab').hide();
      $('.according-img-tab:first').show();
- 
+
      // Click function
      $('.accordion-item-wrapp .accordion-item-content').mouseenter(function(){
      $('.accordion-item-wrapp .accordion-item-content').removeClass('active');
      // $(this).addClass('active');
      $('.according-img-tab').hide();
-     
+
      var activeTab = $(this).find('.accordion-tab-item').attr('data-bs-target'); 
      $(activeTab).fadeIn();
      return false;
@@ -983,7 +983,7 @@
     TweenMax.to({}, 0.02, {
         repeat: -1,
         onRepeat: function () {
-            posX += (mouseX - posX) / 9;
+            posX += (mouseX - posX) /9;
             posY += (mouseY - posY) / 9;
 
             TweenMax.set(follower, {
@@ -1412,6 +1412,44 @@ $(".to").text("$" + $(".price_slider").slider("values", 1));
 
     $(".svg-img").inlineSvg(); 
 
+    // Magnific Popup - with null check
+    if (typeof $.fn.magnificPopup !== 'undefined') {
+        $('.popup-image').magnificPopup({
+            type: 'image',
+            gallery: {
+                enabled: true
+            }
+        });
+
+        $('.popup-video').magnificPopup({
+            type: 'iframe'
+        });
+    }
+
+    // Initialize Swipers - with null check
+    if (typeof Swiper !== 'undefined') {
+        const swiperContainers = document.querySelectorAll('.swiper-container');
+        if (swiperContainers.length > 0) {
+            swiperContainers.forEach(container => {
+                new Swiper(container, {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                });
+            });
+        }
+    }
 
     //Image Reveal Animation
     if ($('.th-anim').length) {
@@ -1441,7 +1479,31 @@ $(".to").text("$" + $(".price_slider").slider("values", 1));
         });
     }
 
-   
+    // Intersection Observer
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all animation elements - with null check
+    const animationElements = document.querySelectorAll('[data-ani]');
+    if (animationElements.length > 0) {
+        animationElements.forEach(el => {
+            if (el) {
+                observer.observe(el);
+            }
+        });
+    }
+
+
     /*----------- 00. Woocommerce Toggle ----------*/
     // Ship To Different Address
     $("#ship-to-different-address-checkbox").on("change", function () {
@@ -1537,14 +1599,14 @@ $(".to").text("$" + $(".price_slider").slider("values", 1));
 
 
 
-    
+
 
     // /*----------- 00. Right Click Disable ----------*/ 
     //   window.addEventListener('contextmenu', function (e) {
     //     // do something here...
     //     e.preventDefault();  
     //   }, false); 
- 
+
     // /*----------- 00. Inspect Element Disable ----------*/   
     //   document.onkeydown = function (e) { 
     //     if (event.keyCode == 123) {  
