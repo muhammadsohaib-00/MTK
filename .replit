@@ -1,8 +1,9 @@
-modules = ["web"]
-run = "web start"
+
+modules = ["web", "nodejs-20"]
+run = "npm start"
 
 [nix]
 channel = "stable-25_05"
 
 [deployment]
-run = ["sh", "-c", "web start"]
+run = ["sh", "-c", "npm start"]

@@ -1,0 +1,628 @@
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>M T K - Admin Panel</title>
+    <meta name="author" content="M T K">
+    <meta name="description" content="Admin Panel for Managing Classes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+        
+        .event-form {
+            max-width: 800px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .modal {
+            z-index: 9999;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #667eea;
+        }
+        
+        .badge {
+            font-size: 11px;
+        }
+        
+        .event-image-preview {
+            max-width: 100px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">M T K Admin Panel</h2>
+                    <p class="mb-0">Manage classes, events, and registrations</p>
+                </div>
+                <div>
+                    <span class="me-3">Welcome, <strong id="adminName">Admin</strong></span>
+                    <a href="index.html" class="btn btn-light btn-sm me-2">View Site</a>
+                    <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Access Check -->
+        <div id="accessDenied" class="admin-card text-center" style="display: none;">
+            <h3>Access Denied</h3>
+            <p>You need admin privileges to access this page.</p>
+            <a href="events.html" class="btn btn-primary">Go to Events</a>
+        </div>
+
+        <!-- Admin Content -->
+        <div id="adminContent" style="display: none;">
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalEvents">0</div>
+                        <p class="mb-0">Total Events</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="upcomingEvents">0</div>
+                        <p class="mb-0">Upcoming Events</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalRegistrations">0</div>
+                        <p class="mb-0">Total Registrations</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalRevenue">$0</div>
+                        <p class="mb-0">Projected Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="events-tab" data-bs-toggle="tab" data-bs-target="#events" type="button" role="tab">
+                        Events Management
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab">
+                        Create New Event
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="adminTabContent">
+                <!-- Events Management Tab -->
+                <div class="tab-pane fade show active" id="events" role="tabpanel">
+                    <div class="admin-card">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4>All Events</h4>
+                            <button class="btn btn-primary" onclick="refreshEvents()">
+                                <i class="fa fa-refresh"></i> Refresh
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                        <th>Capacity</th>
+                                        <th>Registered</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="eventsTableBody">
+                                    <!-- Events will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Event Tab -->
+                <div class="tab-pane fade" id="create" role="tabpanel">
+                    <div class="admin-card">
+                        <h4 class="mb-4">Create New Event/Class</h4>
+                        
+                        <form id="createEventForm" class="event-form">
+                            <!-- Basic Information -->
+                            <div class="form-section">
+                                <h5 class="section-title">Basic Information</h5>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">Event Title *</label>
+                                        <input type="text" class="form-control" id="eventTitle" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Category *</label>
+                                        <select class="form-select" id="eventCategory" required>
+                                            <option value="">Select Category</option>
+                                            <option value="dancing">Dancing</option>
+                                            <option value="singing">Singing</option>
+                                            <option value="acting">Acting</option>
+                                            <option value="script_writing">Script Writing</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description *</label>
+                                    <textarea class="form-control" id="eventDescription" rows="4" required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Schedule & Capacity -->
+                            <div class="form-section">
+                                <h5 class="section-title">Schedule & Capacity</h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Date *</label>
+                                        <input type="date" class="form-control" id="eventDate" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Time *</label>
+                                        <input type="time" class="form-control" id="eventTime" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Duration</label>
+                                        <input type="text" class="form-control" id="eventDuration" placeholder="e.g., 2 hours">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Capacity *</label>
+                                        <input type="number" class="form-control" id="eventCapacity" min="1" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Amount ($) *</label>
+                                        <input type="number" class="form-control" id="eventAmount" step="0.01" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Details -->
+                            <div class="form-section">
+                                <h5 class="section-title">Additional Details</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Instructor</label>
+                                        <input type="text" class="form-control" id="eventInstructor">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="eventLocation">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Age Group</label>
+                                        <input type="text" class="form-control" id="eventAgeGroup" placeholder="e.g., 8-12 years">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Skill Level</label>
+                                        <select class="form-select" id="eventSkillLevel">
+                                            <option value="beginner">Beginner</option>
+                                            <option value="intermediate">Intermediate</option>
+                                            <option value="advanced">Advanced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Image URL</label>
+                                    <input type="url" class="form-control" id="eventImageUrl" placeholder="https://example.com/image.jpg">
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary btn-lg">Create Event</button>
+                                <button type="reset" class="btn btn-secondary btn-lg">Clear Form</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Details Modal -->
+    <div class="modal fade" id="eventDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Event Details & Registrations</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="eventDetailsContent">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    
+    <script>
+        let currentAdmin = null;
+        let allEvents = [];
+
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('createEventForm').addEventListener('submit', handleCreateEvent);
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').setAttribute('min', today);
+        }
+
+        async function checkAdminAccess() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (data.success && data.user.is_admin) {
+                    currentAdmin = data.user;
+                    document.getElementById('adminName').textContent = currentAdmin.full_name;
+                    document.getElementById('adminContent').style.display = 'block';
+                    loadAdminData();
+                } else {
+                    document.getElementById('accessDenied').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Admin access check failed:', error);
+                document.getElementById('accessDenied').style.display = 'block';
+            }
+        }
+
+        async function loadAdminData() {
+            await loadEvents();
+            updateStats();
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/admin/events');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allEvents = data.events;
+                    displayEvents();
+                } else {
+                    console.error('Failed to load events:', data.message);
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+            }
+        }
+
+        function displayEvents() {
+            const tbody = document.getElementById('eventsTableBody');
+            
+            if (allEvents.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No events found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = allEvents.map(event => {
+                const eventDate = new Date(event.date).toLocaleDateString();
+                const statusBadge = getStatusBadge(event.status);
+                const categoryBadge = getCategoryBadge(event.category);
+                
+                return `
+                    <tr>
+                        <td>
+                            <strong>${event.title}</strong>
+                            ${event.image_url ? `<br><img src="${event.image_url}" class="event-image-preview" alt="Event">` : ''}
+                        </td>
+                        <td>${categoryBadge}</td>
+                        <td>${eventDate}<br><small class="text-muted">${event.time.substring(0, 5)}</small></td>
+                        <td>${event.capacity}</td>
+                        <td>
+                            <span class="badge bg-primary">${event.registered_count}</span>
+                            <small class="text-muted d-block">${event.available_slots} left</small>
+                        </td>
+                        <td>$${event.amount}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="btn btn-info btn-sm" onclick="viewEventDetails(${event.id})" title="View Details">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="editEvent(${event.id})" title="Edit">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteEvent(${event.id})" title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                upcoming: '<span class="badge bg-success">Upcoming</span>',
+                ongoing: '<span class="badge bg-warning">Ongoing</span>',
+                completed: '<span class="badge bg-secondary">Completed</span>',
+                cancelled: '<span class="badge bg-danger">Cancelled</span>'
+            };
+            return badges[status] || '<span class="badge bg-light">Unknown</span>';
+        }
+
+        function getCategoryBadge(category) {
+            const badges = {
+                dancing: '<span class="badge bg-danger">Dancing</span>',
+                singing: '<span class="badge bg-primary">Singing</span>',
+                acting: '<span class="badge bg-warning">Acting</span>',
+                script_writing: '<span class="badge bg-info">Script Writing</span>'
+            };
+            return badges[category] || '<span class="badge bg-light">Other</span>';
+        }
+
+        function updateStats() {
+            const upcomingEvents = allEvents.filter(e => e.status === 'upcoming').length;
+            const totalRegistrations = allEvents.reduce((sum, e) => sum + e.registered_count, 0);
+            const totalRevenue = allEvents.reduce((sum, e) => sum + (e.registered_count * parseFloat(e.amount)), 0);
+            
+            document.getElementById('totalEvents').textContent = allEvents.length;
+            document.getElementById('upcomingEvents').textContent = upcomingEvents;
+            document.getElementById('totalRegistrations').textContent = totalRegistrations;
+            document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+        }
+
+        async function handleCreateEvent(e) {
+            e.preventDefault();
+            
+            const eventData = {
+                title: document.getElementById('eventTitle').value,
+                description: document.getElementById('eventDescription').value,
+                category: document.getElementById('eventCategory').value,
+                date: document.getElementById('eventDate').value,
+                time: document.getElementById('eventTime').value,
+                duration: document.getElementById('eventDuration').value,
+                capacity: parseInt(document.getElementById('eventCapacity').value),
+                amount: parseFloat(document.getElementById('eventAmount').value),
+                instructor: document.getElementById('eventInstructor').value,
+                location: document.getElementById('eventLocation').value,
+                age_group: document.getElementById('eventAgeGroup').value,
+                skill_level: document.getElementById('eventSkillLevel').value,
+                image_url: document.getElementById('eventImageUrl').value
+            };
+            
+            try {
+                const response = await fetch('/api/admin/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(eventData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Event created successfully!');
+                    document.getElementById('createEventForm').reset();
+                    
+                    // Switch to events tab and refresh
+                    document.getElementById('events-tab').click();
+                    await loadEvents();
+                    updateStats();
+                } else {
+                    alert('Failed to create event: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error creating event. Please try again.');
+                console.error('Create event error:', error);
+            }
+        }
+
+        async function viewEventDetails(eventId) {
+            try {
+                const event = allEvents.find(e => e.id === eventId);
+                if (!event) return;
+                
+                // Load registrations for this event
+                const response = await fetch(`/api/admin/events/${eventId}/registrations`);
+                const data = await response.json();
+                
+                let registrationsHTML = '<p>No registrations yet.</p>';
+                
+                if (data.success && data.registrations.length > 0) {
+                    registrationsHTML = `
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Registered Date</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.registrations.map(reg => `
+                                        <tr>
+                                            <td>${reg.full_name}</td>
+                                            <td>${reg.email}</td>
+                                            <td>${reg.phone || 'N/A'}</td>
+                                            <td>${new Date(reg.registration_date).toLocaleDateString()}</td>
+                                            <td>${reg.notes || 'None'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+                const content = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Event Information</h6>
+                            <p><strong>Title:</strong> ${event.title}</p>
+                            <p><strong>Category:</strong> ${event.category.replace('_', ' ')}</p>
+                            <p><strong>Date:</strong> ${new Date(event.date).toLocaleDateString()}</p>
+                            <p><strong>Time:</strong> ${event.time.substring(0, 5)}</p>
+                            <p><strong>Duration:</strong> ${event.duration || 'N/A'}</p>
+                            <p><strong>Instructor:</strong> ${event.instructor || 'N/A'}</p>
+                            <p><strong>Location:</strong> ${event.location || 'N/A'}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Capacity & Pricing</h6>
+                            <p><strong>Capacity:</strong> ${event.capacity}</p>
+                            <p><strong>Registered:</strong> ${event.registered_count}</p>
+                            <p><strong>Available:</strong> ${event.available_slots}</p>
+                            <p><strong>Amount:</strong> $${event.amount}</p>
+                            <p><strong>Age Group:</strong> ${event.age_group || 'N/A'}</p>
+                            <p><strong>Skill Level:</strong> ${event.skill_level}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Description</h6>
+                    <p>${event.description}</p>
+                    
+                    <hr>
+                    
+                    <h6>Registrations (${data.registrations ? data.registrations.length : 0})</h6>
+                    ${registrationsHTML}
+                `;
+                
+                document.getElementById('eventDetailsContent').innerHTML = content;
+                new bootstrap.Modal(document.getElementById('eventDetailsModal')).show();
+                
+            } catch (error) {
+                console.error('Error loading event details:', error);
+                alert('Failed to load event details.');
+            }
+        }
+
+        function editEvent(eventId) {
+            // For now, just show an alert. You can implement edit functionality later
+            alert('Edit functionality will be implemented in the next update!');
+        }
+
+        async function deleteEvent(eventId) {
+            if (!confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+                return;
+            }
+            
+            // For now, just show an alert. You can implement delete functionality later
+            alert('Delete functionality will be implemented in the next update!');
+        }
+
+        function refreshEvents() {
+            loadAdminData();
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        }
+    </script>
+</body>
+</html>
