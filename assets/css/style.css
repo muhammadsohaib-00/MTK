@@ -7549,11 +7549,24 @@ heding animation  end
 ------------------------------------ */
 /*------------------- 4.3. Footer  -------------------*/
 .footer-wrapper {
-  position: relative;
-  z-index: 2;
-  overflow: hidden;
+ position: relative; /* Allow overlap prevention */
+    margin-top: 30px; /* Adjust as necessary */
+    clear: both;
 }
 
+
+#eventsContainer {
+    padding-bottom: 100px; /* Space for the footer */
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .footer-wrapper {
+        margin-top: 20px; /* Adjust for smaller screens */
+    }
+    #eventsContainer {
+        padding-bottom: 80px; /* Space for footer on smaller screens */
+    }
+}
 .widget-area {
   padding-top: 100px;
   padding-bottom: 46px;
