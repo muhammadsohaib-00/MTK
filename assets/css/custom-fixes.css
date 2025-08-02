@@ -1,4 +1,3 @@
-
 /* Custom Fixes for M T K Website */
 
 /* Navbar Fixes */
@@ -27,7 +26,7 @@
         padding: 10px;
         border-radius: 5px;
     }
-    
+
     .th-mobile-menu ul li a {
         padding: 15px 20px;
         border-bottom: 1px solid #eee;
@@ -48,12 +47,12 @@
         font-size: 28px;
         line-height: 1.3;
     }
-    
+
     .sec-title {
         font-size: 24px;
         line-height: 1.4;
     }
-    
+
     .th-btn {
         padding: 10px 20px;
         font-size: 14px;
@@ -65,11 +64,11 @@
         padding-left: 15px;
         padding-right: 15px;
     }
-    
+
     .breadcumb-title {
         font-size: 24px;
     }
-    
+
     .sec-title {
         font-size: 20px;
     }
@@ -243,7 +242,7 @@ main, .main-content {
     #events-sec {
         padding-bottom: 80px !important;
     }
-    
+
     .footer-wrapper {
         margin-top: 40px;
     }
@@ -252,4 +251,67 @@ main, .main-content {
 .scroll-top:hover {
     background: var(--title-color);
     transform: scale(1.1);
+}
+
+/* Custom fixes for better layout */
+
+/* Ensure footer doesn't overlap content */
+.footer-wrapper {
+    margin-top: auto;
+}
+
+/* Fix main content area to prevent footer overlap */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main, .main-content {
+    flex: 1;
+    padding-bottom: 2rem;
+}
+
+/* Events page specific fixes */
+#eventsContainer {
+    margin-bottom: 3rem;
+}
+
+/* Auth modal improvements */
+.auth-modal {
+    z-index: 9999;
+}
+
+.auth-modal .modal-content {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Ensure proper spacing for content sections */
+.space {
+    padding: 80px 0;
+}
+
+@media (max-width: 768px) {
+    .space {
+        padding: 60px 0;
+    }
+}
+
+/* Fix for events slider container */
+#homeEventsContainer {
+    min-height: 300px;
+}
+
+/* Fix for no events message */
+#noHomeEventsMessage {
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Ensure videos load properly */
+.slide-video {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
