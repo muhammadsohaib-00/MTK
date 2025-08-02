@@ -22,8 +22,8 @@ app.use(session({
 // MySQL connection
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: '',
+    user: 'mtk_user',
+    password: 'password123',
     database: 'mtk_classes'
 });
 
