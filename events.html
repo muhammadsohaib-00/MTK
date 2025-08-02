@@ -500,6 +500,18 @@
             checkAuthStatus();
             loadEvents();
             setupEventListeners();
+            
+            // Check if redirected from home page
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('from') === 'home') {
+                // Scroll to events section or highlight events
+                setTimeout(() => {
+                    document.querySelector('.title-area').scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 500);
+            }
         });
 
         function setupEventListeners() {

@@ -328,10 +328,33 @@ app.get('/api/user', async (req, res) => {
             }
             
             if (!user) {
+                // Clear invalid session
+                req.session.destroy();
                 return res.status(404).json({ success: false, message: 'User not found' });
             }
             
             res.json({ success: true, user: user });
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Check admin status
+app.get('/api/admin/check', async (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ success: false, message: 'Not authenticated' });
+    }
+    
+    try {
+        const query = 'SELECT is_admin FROM users WHERE id = ?';
+        
+        db.get(query, [req.session.userId], (err, user) => {
+            if (err || !user) {
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+            
+            res.json({ success: true, is_admin: user.is_admin });
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error' });

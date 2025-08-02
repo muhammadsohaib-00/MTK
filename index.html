@@ -246,11 +246,8 @@
                             </div>
                             <div class="header-links">
                                 <ul>
-                                    <li class="d-none d-md-inline-block"><a href="faq.html">FAQ</a></li>
                                     <li class="d-none d-md-inline-block"><a href="contact.html">Support</a></li>
-                                    <li><a href="#login-form" class="popup-content">Sign In / Register<i
-                                                class="fa-regular fa-user"></i></a>
-                                    </li>
+                                    <li id="authLink"><a href="#" onclick="showAuthModal()">Sign In / Register<i class="fa-regular fa-user"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -697,168 +694,23 @@ Service Area
                         </div>
                 </div>
             </div>
-            <div class="slider-area tour-slider ">
-                <div class="swiper th-slider has-shadow"
+            <div class="slider-area tour-slider">
+                <div class="swiper th-slider has-shadow" id="eventsSlider"
                     data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"},"1300":{"slidesPerView":"4"}}}'>
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="tour-box th-ani gsap-cursor">
-                                <div class="tour-box_img global-img">
-                                    <img src="assets/img/tour/tour_box_1.jpg" alt="image">
-                                </div>
-                                <div class="tour-content">
-                                    <h3 class="box-title"><a href="events.html">Beginner Dancing Class</a></h3>
-                                    <div class="tour-rating">
-                                        <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
-                                                style="width:100%">Rated
-                                                <strong class="rating">5.00</strong> out of 5 based on <span
-                                                    class="rating">4.8</span>(4.8
-                                                Rating)</span></div>
-                                        <a href="events.html" class="woocommerce-review-link">(<span
-                                                class="count">4.8</span>
-                                            Rating)</a>
-                                    </div>
-                                    <h4 class="tour-box_price"><span class="currency">$50.00</span>/Class</h4>
-                                    <div class="tour-action">
-                                        <span><i class="fa-light fa-clock"></i>1 Hour</span>
-                                        <a href="events.html" class="th-btn style4 th-icon">Register</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="tour-box th-ani gsap-cursor">
-                                <div class="tour-box_img global-img">
-                                    <img src="assets/img/tour/tour_box_2.jpg" alt="image">
-                                </div>
-                                <div class="tour-content">
-                                    <h3 class="box-title"><a href="events.html">Voice Training Class</a></h3>
-                                    <div class="tour-rating">
-                                        <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
-                                                style="width:100%">Rated
-                                                <strong class="rating">5.00</strong> out of 5 based on <span
-                                                    class="rating">4.8</span>(4.8
-                                                Rating)</span></div>
-                                        <a href="events.html" class="woocommerce-review-link">(<span
-                                                class="count">4.8</span>
-                                            Rating)</a>
-                                    </div>
-                                    <h4 class="tour-box_price"><span class="currency">$45.00</span>/Class</h4>
-                                    <div class="tour-action">
-                                        <span><i class="fa-light fa-clock"></i>1 Hour</span>
-                                        <a href="events.html" class="th-btn style4 th-icon">Register</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="tour-box th-ani gsap-cursor">
-                                <div class="tour-box_img global-img">
-                                    <img src="assets/img/tour/tour_box_3.jpg" alt="image">
-                                </div>
-                                <div class="tour-content">
-                                    <h3 class="box-title"><a href="tour-details.html">Dubai Tour Package</a></h3>
-                                    <div class="tour-rating">
-                                        <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
-                                                style="width:100%">Rated
-                                                <strong class="rating">5.00</strong> out of 5 based on <span
-                                                    class="rating">4.8</span>(4.8
-                                                Rating)</span></div>
-                                        <a href="tour-details.html" class="woocommerce-review-link">(<span
-                                                class="count">4.8</span>
-                                            Rating)</a>
-                                    </div>
-                                    <h4 class="tour-box_price"><span class="currency">$980.00</span>/Person</h4>
-                                    <div class="tour-action">
-                                        <span><i class="fa-light fa-clock"></i>7 Days</span>
-                                        <a href="tour-details.html" class="th-btn style4 th-icon">Book Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="tour-box th-ani gsap-cursor">
-                                <div class="tour-box_img global-img">
-                                    <img src="assets/img/tour/tour_box_4.jpg" alt="image">
-                                </div>
-                                <div class="tour-content">
-                                    <h3 class="box-title"><a href="tour-details.html">Switzerland</a></h3>
-                                    <div class="tour-rating">
-                                        <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
-                                                style="width:100%">Rated
-                                                <strong class="rating">5.00</strong> out of 5 based on <span
-                                                    class="rating">4.8</span>(4.8
-                                                Rating)</span></div>
-                                        <a href="tour-details.html" class="woocommerce-review-link">(<span
-                                                class="count">4.8</span>
-                                            Rating)</a>
-                                    </div>
-                                    <h4 class="tour-box_price"><span class="currency">$980.00</span>/Person</h4>
-                                    <div class="tour-action">
-                                        <span><i class="fa-light fa-clock"></i>7 Days</span>
-                                        <a href="tour-details.html" class="th-btn style4 th-icon">Book Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="tour-box th-ani gsap-cursor">
-                                <div class="tour-box_img global-img">
-                                    <img src="assets/img/tour/tour_box_1.jpg" alt="image">
-                                </div>
-                                <div class="tour-content">
-                                    <h3 class="box-title"><a href="events.html">Beginner Dancing Class</a></h3>
-                                    <div class="tour-rating">
-                                        <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
-                                                style="width:100%">Rated
-                                                <strong class="rating">5.00</strong> out of 5 based on <span
-                                                    class="rating">4.8</span>(4.8
-                                                Rating)</span></div>
-                                        <a href="events.html" class="woocommerce-review-link">(<span
-                                                class="count">4.8</span>
-                                            Rating)</a>
-                                    </div>
-                                    <h4 class="tour-box_price"><span class="currency">$50.00</span>/Class</h4>
-                                    <div class="tour-action">
-                                        <span><i class="fa-light fa-clock"></i>1 Hour</span>
-                                        <a href="events.html" class="th-btn style4 th-icon">Register</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="tour-box th-ani gsap-cursor">
-                                <div class="tour-box_img global-img">
-                                    <img src="assets/img/tour/tour_box_2.jpg" alt="image">
-                                </div>
-                                <div class="tour-content">
-                                    <h3 class="box-title"><a href="events.html">Voice Training Class</a></h3>
-                                    <div class="tour-rating">
-                                        <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
-                                                style="width:100%">Rated
-                                                <strong class="rating">5.00</strong> out of 5 based on <span
-                                                    class="rating">4.8</span>(4.8
-                                                Rating)</span></div>
-                                        <a href="events.html" class="woocommerce-review-link">(<span
-                                                class="count">4.8</span>
-                                            Rating)</a>
-                                    </div>
-                                    <h4 class="tour-box_price"><span class="currency">$45.00</span>/Class</h4>
-                                    <div class="tour-action">
-                                        <span><i class="fa-light fa-clock"></i>1 Hour</span>
-                                        <a href="events.html" class="th-btn style4 th-icon">Register</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
+                    <div class="swiper-wrapper" id="homeEventsContainer">
+                        <!-- Events will be loaded here -->
                     </div>
+                </div>
+                
+                <!-- No Events Message -->
+                <div id="noHomeEventsMessage" class="text-center" style="display: none;">
+                    <h4>No upcoming events available</h4>
+                    <p>Please check back later for new classes and events!</p>
+                </div>
+                
+                <!-- View All Events Button -->
+                <div class="text-center mt-4">
+                    <a href="events.html" class="th-btn style3 th-icon">View All Events</a>
                 </div>
             </div>
         </div>
@@ -1898,82 +1750,56 @@ Brand Area
     <!--==============================
 modal Area  
 ==============================-->
-    <div id="login-form" class="popup-login-register mfp-hide">
-        <ul class="nav" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-menu" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
-                    type="button" role="tab" aria-controls="pills-home" aria-selected="false">Login</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-menu active" id="pills-profile-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
-                    aria-selected="true">Register</button>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <h3 class="box-title mb-30">Sign in to your account</h3>
-                <div class="th-login-form">
-                    <form action="mail.php" method="POST" class="login-form ajax-contact">
-                        <div class="row">
-                            <div class="form-group col-12">
-                                <label>Username or email</label>
-                                <input type="text" class="form-control" name="email" id="email" required="required">
-                            </div>
-                            <div class="form-group col-12">
-                                <label>Password</label>
-                                <input type="password" class="form-control" name="pasword" id="pasword"
-                                    required="required">
-                            </div>
-
-                            <div class="form-btn mb-20 col-12">
-                                <button class="th-btn btn-fw th-radius2 ">Send Message</button>
-                            </div>
-                        </div>
-                        <div id="forgot_url">
-                            <a href="my-account.html">Forgot password?</a>
-                        </div>
-                        <p class="form-messages mb-0 mt-3"></p>
-                    </form>
+    
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="auth-modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 16px; width: 90%; max-width: 500px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 id="authModalTitle">Sign In</h3>
+                <button type="button" class="btn-close" onclick="closeAuthModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" style="display: block;">
+                <div class="mb-3">
+                    <label class="form-label">Username or Email</label>
+                    <input type="text" class="form-control" id="loginUsername" required>
                 </div>
-            </div>
-            <div class="tab-pane fade active show" id="pills-profile" role="tabpanel"
-                aria-labelledby="pills-profile-tab">
-                <h3 class="th-form-title mb-30">Sign in to your account</h3>
-                <form action="mail.php" method="POST" class="login-form ajax-contact">
-                    <div class="row">
-                        <div class="form-group col-12">
-                            <label>Username*</label>
-                            <input type="text" class="form-control" name="usename" id="usename" required="required">
-                        </div>
-                        <div class="form-group col-12">
-                            <label>First name*</label>
-                            <input type="text" class="form-control" name="firstname" id="firstname" required="required">
-                        </div>
-                        <div class="form-group col-12">
-                            <label>Last name*</label>
-                            <input type="text" class="form-control" name="lastname" id="lastname" required="required">
-                        </div>
-                        <div class="form-group col-12">
-                            <label for="new_email">Your email*</label>
-                            <input type="text" class="form-control" name="new_email" id="new_email" required="required">
-                        </div>
-                        <div class="form-group col-12">
-                            <label for="new_email_confirm">Confirm email*</label>
-                            <input type="text" class="form-control" name="new_email_confirm" id="new_email_confirm"
-                                required="required">
-                        </div>
-                        <div class="statement">
-                            <span class="register-notes">A password will be emailed to you.</span>
-                        </div>
-
-                        <div class="form-btn mt-20 col-12">
-                            <button class="th-btn btn-fw th-radius2 ">Sign up</button>
-                        </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <button type="submit" class="th-btn w-100 mb-3">Sign In</button>
+                <p class="text-center">Don't have an account? <a href="#" onclick="switchToRegister()">Register here</a></p>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="registerForm" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" id="regUsername" required>
                     </div>
-                    <p class="form-messages mb-0 mt-3"></p>
-                </form>
-            </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="regFullName" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="regEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="regPhone">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="regPassword" required>
+                </div>
+                <button type="submit" class="th-btn w-100 mb-3">Register</button>
+                <p class="text-center">Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a></p>
+            </form>
         </div>
     </div>
 
@@ -2015,54 +1841,250 @@ modal Area
 
     <!-- Main Js File -->
     <script src="assets/js/main.js"></script>
-    <!-- <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const swiper = new Swiper("#aboutSlider1", {
-                effect: 'coverflow',
-                centeredSlides: true,
-                slidesPerView: 3,
-                loop: false,
-                coverflowEffect: {
-                    rotate: 0,
-                    stretch: 95,
-                    depth: 212,
-                    modifier: 1,
-                    slideShadows: false
-                },
-                breakpoints: {
-                    0: { slidesPerView: 1 },
-                    576: { slidesPerView: 2 },
-                    992: { slidesPerView: 3 },
-                    1200: { slidesPerView: 3 }
-                },
-                on: {
-                    init: function () {
-                        toggleVideoAudio(this);
-                    },
-                    slideChange: function () {
-                        toggleVideoAudio(this);
-                    }
-                }
-            });
-
-            function toggleVideoAudio(swiper) {
-                const videos = document.querySelectorAll('.slide-video');
-                videos.forEach(video => {
-                    video.muted = true;
-                    video.play().catch(() => { }); // Play silently
-                });
-
-                const activeSlide = swiper.slides[swiper.activeIndex];
-                if (activeSlide) {
-                    const activeVideo = activeSlide.querySelector('.slide-video');
-                    if (activeVideo) {
-                        activeVideo.muted = false;
-                        activeVideo.play().catch(() => { });
-                    }
-                }
-            }
+    
+    <script>
+        let currentUser = null;
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadHomeEvents();
+            setupEventListeners();
         });
-    </script> -->
+
+        function setupEventListeners() {
+            // Auth forms
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+        }
+
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    updateAuthUI();
+                    
+                    // Redirect admin to admin page
+                    if (data.user.is_admin && window.location.pathname === '/') {
+                        window.location.href = 'admin.html';
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+
+        function updateAuthUI() {
+            if (currentUser) {
+                document.getElementById('authLink').innerHTML = `<a href="#" onclick="logout()">${currentUser.full_name} - Logout</a>`;
+            } else {
+                document.getElementById('authLink').innerHTML = '<a href="#" onclick="showAuthModal()">Sign In / Register<i class="fa-regular fa-user"></i></a>';
+            }
+        }
+
+        async function loadHomeEvents() {
+            try {
+                const response = await fetch('/api/events');
+                const data = await response.json();
+                
+                if (data.success && data.events.length > 0) {
+                    // Show only first 6 events for home page
+                    const homeEvents = data.events.slice(0, 6);
+                    displayHomeEvents(homeEvents);
+                } else {
+                    document.getElementById('noHomeEventsMessage').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Failed to load events:', error);
+                document.getElementById('noHomeEventsMessage').style.display = 'block';
+            }
+        }
+
+        function displayHomeEvents(events) {
+            const container = document.getElementById('homeEventsContainer');
+            const noEventsMsg = document.getElementById('noHomeEventsMessage');
+            
+            if (events.length === 0) {
+                container.innerHTML = '';
+                noEventsMsg.style.display = 'block';
+                return;
+            }
+            
+            noEventsMsg.style.display = 'none';
+            
+            container.innerHTML = events.map(event => {
+                const eventDate = new Date(event.date).toLocaleDateString();
+                const eventTime = event.time.substring(0, 5);
+                const isFullyBooked = event.available_slots <= 0;
+                
+                // Category-based images
+                const categoryImages = {
+                    dancing: 'assets/img/tour/tour_box_1.jpg',
+                    singing: 'assets/img/tour/tour_box_2.jpg',
+                    acting: 'assets/img/tour/tour_box_3.jpg',
+                    script_writing: 'assets/img/tour/tour_box_4.jpg'
+                };
+                
+                const imageUrl = event.image_url || categoryImages[event.category] || 'assets/img/tour/tour_box_1.jpg';
+                
+                return `
+                    <div class="swiper-slide">
+                        <div class="tour-box th-ani gsap-cursor" onclick="goToEvents()">
+                            <div class="tour-box_img global-img">
+                                <img src="${imageUrl}" alt="${event.title}">
+                                ${isFullyBooked ? '<div class="sold-out-badge" style="position: absolute; top: 10px; right: 10px; background: red; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;">Sold Out</div>' : ''}
+                            </div>
+                            <div class="tour-content">
+                                <h3 class="box-title"><a href="events.html">${event.title}</a></h3>
+                                <div class="tour-rating">
+                                    <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5">
+                                        <span style="width:100%">★★★★★</span>
+                                    </div>
+                                    <span class="category-badge" style="background: #667eea; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 10px;">
+                                        ${event.category.replace('_', ' ').toUpperCase()}
+                                    </span>
+                                </div>
+                                <div class="event-meta" style="font-size: 13px; color: #666; margin: 10px 0;">
+                                    <span><i class="fa fa-calendar"></i> ${eventDate}</span> | 
+                                    <span><i class="fa fa-clock"></i> ${eventTime}</span>
+                                    <br>
+                                    <span><i class="fa fa-users"></i> ${event.available_slots} slots left</span>
+                                </div>
+                                <h4 class="tour-box_price"><span class="currency">$${event.amount}</span>/Class</h4>
+                                <div class="tour-action">
+                                    <span><i class="fa-light fa-clock"></i>${event.duration || '1 Hour'}</span>
+                                    <a href="events.html" class="th-btn style4 th-icon">${isFullyBooked ? 'Sold Out' : 'Register'}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Initialize Swiper after adding content
+            setTimeout(() => {
+                if (typeof Swiper !== 'undefined') {
+                    new Swiper('#eventsSlider .swiper', {
+                        slidesPerView: 1,
+                        spaceBetween: 30,
+                        loop: false,
+                        breakpoints: {
+                            576: { slidesPerView: 1 },
+                            768: { slidesPerView: 2 },
+                            992: { slidesPerView: 2 },
+                            1200: { slidesPerView: 3 },
+                            1300: { slidesPerView: 4 }
+                        }
+                    });
+                }
+            }, 100);
+        }
+
+        function goToEvents() {
+            window.location.href = 'events.html';
+        }
+
+        function showAuthModal() {
+            document.getElementById('authModal').style.display = 'block';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchToRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('authModalTitle').textContent = 'Register';
+        }
+
+        function switchToLogin() {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('authModalTitle').textContent = 'Sign In';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    updateAuthUI();
+                    closeAuthModal();
+                    
+                    // Redirect admin to admin page
+                    if (data.user.is_admin) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        alert('Login successful!');
+                    }
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Login failed. Please try again.');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const userData = {
+                username: document.getElementById('regUsername').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                full_name: document.getElementById('regFullName').value,
+                phone: document.getElementById('regPhone').value
+            };
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Registration successful! Please sign in.');
+                    switchToLogin();
+                    document.getElementById('registerForm').reset();
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Registration failed. Please try again.');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                currentUser = null;
+                updateAuthUI();
+                alert('Logged out successfully!');
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        }
+    </script>
 
 
 </body>
