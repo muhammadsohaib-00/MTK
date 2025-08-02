@@ -169,6 +169,86 @@
     transition: all 0.3s ease;
 }
 
+/* Footer Spacing Fixes */
+body {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.footer-wrapper {
+    margin-top: 80px;
+    z-index: 1;
+    position: relative;
+}
+
+/* Events Page Content Spacing */
+#events-sec {
+    margin-bottom: 0 !important;
+    padding-bottom: 120px !important;
+}
+
+/* Main Content Container */
+main, .main-content {
+    min-height: calc(100vh - 200px);
+    margin-bottom: 0;
+}
+
+/* Ensure proper spacing for dynamic content */
+.events-container {
+    margin-bottom: 100px;
+}
+
+/* Auth Modal Improvements */
+.auth-modal {
+    backdrop-filter: blur(5px);
+}
+
+.auth-modal-content {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: none;
+}
+
+/* User Info Styling */
+.user-info {
+    border-radius: 12px;
+    border: 1px solid #10b981;
+    background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.05) 100%);
+}
+
+/* Filter Tabs Styling */
+.filter-tabs {
+    margin-bottom: 50px;
+}
+
+.filter-tab {
+    background: white;
+    border: 2px solid #e5e7eb;
+    color: #4b5563;
+    transition: all 0.3s ease;
+}
+
+.filter-tab:hover {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.filter-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #events-sec {
+        padding-bottom: 80px !important;
+    }
+    
+    .footer-wrapper {
+        margin-top: 40px;
+    }
+}
+
 .scroll-top:hover {
     background: var(--title-color);
     transform: scale(1.1);

@@ -266,7 +266,7 @@
     <!--==============================
 Events Area  
 ==============================-->
-    <section class="position-relative overflow-hidden space" id="events-sec">
+    <section class="position-relative overflow-hidden space" id="events-sec" style="min-height: 100vh; padding-bottom: 120px;">
         <div class="container">
             <div class="title-area text-center mb-50">
                 <span class="sub-title">Join Our Classes</span>
@@ -274,22 +274,30 @@ Events Area
                 <p class="sec-text">Discover amazing opportunities for your child to learn singing, dancing, acting, and script writing from professional instructors in a fun and supportive environment.</p>
             </div>
 
-            <!-- Filter Buttons -->
-            <div class="filter-menu-active text-center mb-50">
-                <button data-filter="*" class="th-btn active">All Classes</button>
-                <button data-filter=".dancing" class="th-btn">Dancing</button>
-                <button data-filter=".singing" class="th-btn">Singing</button>
-                <button data-filter=".acting" class="th-btn">Acting</button>
-                <button data-filter=".script_writing" class="th-btn">Script Writing</button>
+            <!-- User Info -->
+            <div id="userInfo" class="user-info" style="display: none;">
+                <div class="alert alert-success d-flex align-items-center">
+                    <i class="fa fa-user me-2"></i>
+                    <span>Welcome back, <strong id="userName"></strong>!</span>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <div class="filter-tab active" data-category="all">All Classes</div>
+                <div class="filter-tab" data-category="dancing">Dancing</div>
+                <div class="filter-tab" data-category="singing">Singing</div>
+                <div class="filter-tab" data-category="acting">Acting</div>
+                <div class="filter-tab" data-category="script_writing">Script Writing</div>
             </div>
 
             <!-- Events Grid -->
-            <div class="row gy-30 filter-active" id="eventsContainer">
+            <div class="row gy-30" id="eventsContainer">
                 <!-- Events will be loaded here -->
             </div>
 
             <!-- No Events Message -->
-            <div id="noEventsMessage" class="text-center" style="display: none;">
+            <div id="noEventsMessage" class="text-center" style="display: none; margin-bottom: 100px;">
                 <h4>No events available</h4>
                 <p>Please check back later for new classes and events!</p>
             </div>
