@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { Pool } = require('pg');
+const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const path = require('path');
@@ -19,45 +19,38 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-// PostgreSQL connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/mtk_classes',
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
-
-// Connect to PostgreSQL
-pool.connect()
-    .then(() => {
-        console.log('Connected to PostgreSQL database');
+// SQLite connection
+const db = new sqlite3.Database('mtk_classes.db', (err) => {
+    if (err) {
+        console.error('Database connection failed:', err.message);
+    } else {
+        console.log('Connected to SQLite database');
         createTables();
-    })
-    .catch(err => {
-        console.error('Database connection failed:', err);
-        // Continue without database for now
-    });
+    }
+});
 
 function createTables() {
     // Users table
     const createUsersTable = `
         CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             username VARCHAR(50) UNIQUE NOT NULL,
             email VARCHAR(100) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
             full_name VARCHAR(100) NOT NULL,
             phone VARCHAR(20),
-            is_admin BOOLEAN DEFAULT FALSE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            is_admin BOOLEAN DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     `;
 
     // Events/Classes table
     const createEventsTable = `
         CREATE TABLE IF NOT EXISTS events (
-            id SERIAL PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             title VARCHAR(200) NOT NULL,
             description TEXT,
-            category VARCHAR(20) CHECK (category IN ('dancing', 'singing', 'acting', 'script_writing')) NOT NULL,
+            category VARCHAR(20) NOT NULL CHECK (category IN ('dancing', 'singing', 'acting', 'script_writing')),
             date DATE NOT NULL,
             time TIME NOT NULL,
             duration VARCHAR(50),
@@ -67,21 +60,21 @@ function createTables() {
             instructor VARCHAR(100),
             location VARCHAR(200),
             age_group VARCHAR(50),
-            skill_level VARCHAR(20) CHECK (skill_level IN ('beginner', 'intermediate', 'advanced')) DEFAULT 'beginner',
+            skill_level VARCHAR(20) DEFAULT 'beginner' CHECK (skill_level IN ('beginner', 'intermediate', 'advanced')),
             image_url VARCHAR(500),
-            status VARCHAR(20) CHECK (status IN ('upcoming', 'ongoing', 'completed', 'cancelled')) DEFAULT 'upcoming',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            status VARCHAR(20) DEFAULT 'upcoming' CHECK (status IN ('upcoming', 'ongoing', 'completed', 'cancelled')),
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     `;
 
     // Registrations table
     const createRegistrationsTable = `
         CREATE TABLE IF NOT EXISTS registrations (
-            id SERIAL PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             event_id INTEGER NOT NULL,
-            registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            payment_status VARCHAR(20) CHECK (payment_status IN ('pending', 'paid', 'failed')) DEFAULT 'pending',
+            registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            payment_status VARCHAR(20) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed')),
             notes TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
@@ -89,40 +82,162 @@ function createTables() {
         )
     `;
 
-    pool.query(createUsersTable)
-        .then(() => console.log('Users table ready'))
-        .catch(err => console.error('Error creating users table:', err));
+    db.run(createUsersTable, (err) => {
+        if (err) {
+            console.error('Error creating users table:', err.message);
+        } else {
+            console.log('Users table ready');
+        }
+    });
 
-    pool.query(createEventsTable)
-        .then(() => console.log('Events table ready'))
-        .catch(err => console.error('Error creating events table:', err));
+    db.run(createEventsTable, (err) => {
+        if (err) {
+            console.error('Error creating events table:', err.message);
+        } else {
+            console.log('Events table ready');
+        }
+    });
 
-    pool.query(createRegistrationsTable)
-        .then(() => {
+    db.run(createRegistrationsTable, (err) => {
+        if (err) {
+            console.error('Error creating registrations table:', err.message);
+        } else {
             console.log('Registrations table ready');
             createDefaultAdmin();
-        })
-        .catch(err => console.error('Error creating registrations table:', err));
+        }
+    });
 }
 
 function createDefaultAdmin() {
     const adminPassword = bcrypt.hashSync('admin123', 10);
-    const checkAdmin = 'SELECT * FROM users WHERE username = $1';
+    const checkAdmin = 'SELECT * FROM users WHERE username = ?';
     
-    pool.query(checkAdmin, ['admin'])
-        .then(result => {
-            if (result.rows.length === 0) {
-                const createAdmin = `
-                    INSERT INTO users (username, email, password, full_name, is_admin) 
-                    VALUES ($1, $2, $3, $4, $5)
-                `;
-                
-                pool.query(createAdmin, ['admin', 'admin@mtk.com', adminPassword, 'Administrator', true])
-                    .then(() => console.log('Default admin user created (username: admin, password: admin123)'))
-                    .catch(err => console.error('Error creating admin user:', err));
+    db.get(checkAdmin, ['admin'], (err, row) => {
+        if (err) {
+            console.error('Error checking admin user:', err.message);
+            return;
+        }
+        
+        if (!row) {
+            const createAdmin = `
+                INSERT INTO users (username, email, password, full_name, is_admin) 
+                VALUES (?, ?, ?, ?, ?)
+            `;
+            
+            db.run(createAdmin, ['admin', 'admin@mtk.com', adminPassword, 'Administrator', 1], (err) => {
+                if (err) {
+                    console.error('Error creating admin user:', err.message);
+                } else {
+                    console.log('Default admin user created (username: admin, password: admin123)');
+                    createSampleEvents();
+                }
+            });
+        } else {
+            createSampleEvents();
+        }
+    });
+}
+
+function createSampleEvents() {
+    const checkEvents = 'SELECT COUNT(*) as count FROM events';
+    
+    db.get(checkEvents, [], (err, row) => {
+        if (err || row.count > 0) return;
+        
+        const sampleEvents = [
+            {
+                title: 'Beginner Ballet Dancing',
+                description: 'Learn the fundamentals of ballet dancing with our experienced instructors. Perfect for beginners aged 8-12.',
+                category: 'dancing',
+                date: '2024-02-15',
+                time: '10:00',
+                duration: '2 hours',
+                capacity: 15,
+                amount: 45.00,
+                instructor: 'Sarah Johnson',
+                location: 'Studio A',
+                age_group: '8-12 years',
+                skill_level: 'beginner'
+            },
+            {
+                title: 'Vocal Training Workshop',
+                description: 'Improve your singing voice with professional vocal training techniques and exercises.',
+                category: 'singing',
+                date: '2024-02-18',
+                time: '14:00',
+                duration: '1.5 hours',
+                capacity: 12,
+                amount: 35.00,
+                instructor: 'Michael Stevens',
+                location: 'Music Room',
+                age_group: '10-16 years',
+                skill_level: 'intermediate'
+            },
+            {
+                title: 'Acting for Theatre',
+                description: 'Develop your acting skills for stage performances with character development and scene work.',
+                category: 'acting',
+                date: '2024-02-20',
+                time: '16:00',
+                duration: '3 hours',
+                capacity: 10,
+                amount: 55.00,
+                instructor: 'Emma Davis',
+                location: 'Main Theatre',
+                age_group: '12-18 years',
+                skill_level: 'intermediate'
+            },
+            {
+                title: 'Creative Script Writing',
+                description: 'Learn the art of writing engaging scripts for theatre, film, and television.',
+                category: 'script_writing',
+                date: '2024-02-22',
+                time: '11:00',
+                duration: '2.5 hours',
+                capacity: 8,
+                amount: 40.00,
+                instructor: 'David Wilson',
+                location: 'Writing Lab',
+                age_group: '14+ years',
+                skill_level: 'beginner'
+            },
+            {
+                title: 'Jazz Dance Intensive',
+                description: 'High-energy jazz dance class focusing on technique, style, and performance.',
+                category: 'dancing',
+                date: '2024-02-25',
+                time: '13:00',
+                duration: '2 hours',
+                capacity: 20,
+                amount: 50.00,
+                instructor: 'Lisa Rodriguez',
+                location: 'Studio B',
+                age_group: '13-17 years',
+                skill_level: 'intermediate'
             }
-        })
-        .catch(err => console.error('Error checking admin user:', err));
+        ];
+        
+        const insertEvent = `
+            INSERT INTO events (
+                title, description, category, date, time, duration, capacity, 
+                amount, instructor, location, age_group, skill_level
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        
+        sampleEvents.forEach(event => {
+            db.run(insertEvent, [
+                event.title, event.description, event.category, event.date, 
+                event.time, event.duration, event.capacity, event.amount,
+                event.instructor, event.location, event.age_group, event.skill_level
+            ], (err) => {
+                if (err) {
+                    console.error('Error creating sample event:', err.message);
+                }
+            });
+        });
+        
+        console.log('Sample events created successfully');
+    });
 }
 
 // Routes
@@ -133,14 +248,18 @@ app.post('/api/register', async (req, res) => {
     
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const query = 'INSERT INTO users (username, email, password, full_name, phone) VALUES ($1, $2, $3, $4, $5)';
+        const query = 'INSERT INTO users (username, email, password, full_name, phone) VALUES (?, ?, ?, ?, ?)';
         
-        await pool.query(query, [username, email, hashedPassword, full_name, phone]);
-        res.json({ success: true, message: 'Registration successful' });
+        db.run(query, [username, email, hashedPassword, full_name, phone], function(err) {
+            if (err) {
+                if (err.message.includes('UNIQUE constraint failed')) {
+                    return res.status(400).json({ success: false, message: 'Username or email already exists' });
+                }
+                return res.status(500).json({ success: false, message: 'Registration failed' });
+            }
+            res.json({ success: true, message: 'Registration successful' });
+        });
     } catch (error) {
-        if (error.code === '23505') {
-            return res.status(400).json({ success: false, message: 'Username or email already exists' });
-        }
         res.status(500).json({ success: false, message: 'Registration failed' });
     }
 });
@@ -150,34 +269,38 @@ app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     
     try {
-        const query = 'SELECT * FROM users WHERE username = $1 OR email = $1';
-        const result = await pool.query(query, [username]);
+        const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
         
-        if (result.rows.length === 0) {
-            return res.status(400).json({ success: false, message: 'User not found' });
-        }
-        
-        const user = result.rows[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        
-        if (!passwordMatch) {
-            return res.status(400).json({ success: false, message: 'Invalid password' });
-        }
-        
-        req.session.userId = user.id;
-        req.session.username = user.username;
-        req.session.isAdmin = user.is_admin;
-        
-        res.json({ 
-            success: true, 
-            message: 'Login successful',
-            user: {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                full_name: user.full_name,
-                is_admin: user.is_admin
+        db.get(query, [username, username], async (err, user) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Server error' });
             }
+            
+            if (!user) {
+                return res.status(400).json({ success: false, message: 'User not found' });
+            }
+            
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            
+            if (!passwordMatch) {
+                return res.status(400).json({ success: false, message: 'Invalid password' });
+            }
+            
+            req.session.userId = user.id;
+            req.session.username = user.username;
+            req.session.isAdmin = user.is_admin;
+            
+            res.json({ 
+                success: true, 
+                message: 'Login successful',
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    full_name: user.full_name,
+                    is_admin: user.is_admin
+                }
+            });
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error' });
@@ -197,14 +320,19 @@ app.get('/api/user', async (req, res) => {
     }
     
     try {
-        const query = 'SELECT id, username, email, full_name, is_admin FROM users WHERE id = $1';
-        const result = await pool.query(query, [req.session.userId]);
+        const query = 'SELECT id, username, email, full_name, is_admin FROM users WHERE id = ?';
         
-        if (result.rows.length === 0) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-        
-        res.json({ success: true, user: result.rows[0] });
+        db.get(query, [req.session.userId], (err, user) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+            
+            if (!user) {
+                return res.status(404).json({ success: false, message: 'User not found' });
+            }
+            
+            res.json({ success: true, user: user });
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
@@ -217,12 +345,16 @@ app.get('/api/events', async (req, res) => {
             SELECT e.*, 
                    (e.capacity - e.registered_count) as available_slots
             FROM events e 
-            WHERE e.status = 'upcoming' AND e.date >= CURRENT_DATE
+            WHERE e.status = 'upcoming' AND e.date >= date('now')
             ORDER BY e.date ASC, e.time ASC
         `;
         
-        const result = await pool.query(query);
-        res.json({ success: true, events: result.rows });
+        db.all(query, [], (err, events) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Error fetching events' });
+            }
+            res.json({ success: true, events: events });
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Error fetching events' });
     }
@@ -239,31 +371,44 @@ app.post('/api/register-event', async (req, res) => {
     
     try {
         // Check if event has available slots
-        const checkSlots = 'SELECT capacity, registered_count FROM events WHERE id = $1';
-        const eventResult = await pool.query(checkSlots, [event_id]);
+        const checkSlots = 'SELECT capacity, registered_count FROM events WHERE id = ?';
         
-        if (eventResult.rows.length === 0) {
-            return res.status(404).json({ success: false, message: 'Event not found' });
-        }
-        
-        const event = eventResult.rows[0];
-        if (event.registered_count >= event.capacity) {
-            return res.status(400).json({ success: false, message: 'No slots available' });
-        }
-        
-        // Register user for event
-        const registerQuery = 'INSERT INTO registrations (user_id, event_id, notes) VALUES ($1, $2, $3)';
-        await pool.query(registerQuery, [user_id, event_id, notes]);
-        
-        // Update registered count
-        const updateCount = 'UPDATE events SET registered_count = registered_count + 1 WHERE id = $1';
-        await pool.query(updateCount, [event_id]);
-        
-        res.json({ success: true, message: 'Successfully registered for event' });
+        db.get(checkSlots, [event_id], (err, event) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Registration failed' });
+            }
+            
+            if (!event) {
+                return res.status(404).json({ success: false, message: 'Event not found' });
+            }
+            
+            if (event.registered_count >= event.capacity) {
+                return res.status(400).json({ success: false, message: 'No slots available' });
+            }
+            
+            // Register user for event
+            const registerQuery = 'INSERT INTO registrations (user_id, event_id, notes) VALUES (?, ?, ?)';
+            
+            db.run(registerQuery, [user_id, event_id, notes], function(err) {
+                if (err) {
+                    if (err.message.includes('UNIQUE constraint failed')) {
+                        return res.status(400).json({ success: false, message: 'Already registered for this event' });
+                    }
+                    return res.status(500).json({ success: false, message: 'Registration failed' });
+                }
+                
+                // Update registered count
+                const updateCount = 'UPDATE events SET registered_count = registered_count + 1 WHERE id = ?';
+                
+                db.run(updateCount, [event_id], (err) => {
+                    if (err) {
+                        return res.status(500).json({ success: false, message: 'Registration failed' });
+                    }
+                    res.json({ success: true, message: 'Successfully registered for event' });
+                });
+            });
+        });
     } catch (error) {
-        if (error.code === '23505') {
-            return res.status(400).json({ success: false, message: 'Already registered for this event' });
-        }
         res.status(500).json({ success: false, message: 'Registration failed' });
     }
 });
@@ -288,8 +433,7 @@ app.post('/api/admin/events', requireAdmin, async (req, res) => {
             INSERT INTO events (
                 title, description, category, date, time, duration, capacity, 
                 amount, instructor, location, age_group, skill_level, image_url
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-            RETURNING id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         
         const values = [
@@ -297,8 +441,12 @@ app.post('/api/admin/events', requireAdmin, async (req, res) => {
             amount, instructor, location, age_group, skill_level, image_url
         ];
         
-        const result = await pool.query(query, values);
-        res.json({ success: true, message: 'Event created successfully', eventId: result.rows[0].id });
+        db.run(query, values, function(err) {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Failed to create event' });
+            }
+            res.json({ success: true, message: 'Event created successfully', eventId: this.lastID });
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to create event' });
     }
@@ -314,8 +462,12 @@ app.get('/api/admin/events', requireAdmin, async (req, res) => {
             ORDER BY e.created_at DESC
         `;
         
-        const result = await pool.query(query);
-        res.json({ success: true, events: result.rows });
+        db.all(query, [], (err, events) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Error fetching events' });
+            }
+            res.json({ success: true, events: events });
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Error fetching events' });
     }
@@ -328,12 +480,16 @@ app.get('/api/admin/events/:id/registrations', requireAdmin, async (req, res) =>
             SELECT r.*, u.full_name, u.email, u.phone
             FROM registrations r
             JOIN users u ON r.user_id = u.id
-            WHERE r.event_id = $1
+            WHERE r.event_id = ?
             ORDER BY r.registration_date DESC
         `;
         
-        const result = await pool.query(query, [req.params.id]);
-        res.json({ success: true, registrations: result.rows });
+        db.all(query, [req.params.id], (err, registrations) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Error fetching registrations' });
+            }
+            res.json({ success: true, registrations: registrations });
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Error fetching registrations' });
     }
