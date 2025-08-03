@@ -514,18 +514,24 @@ Events Area
     All Js File
 ============================== -->
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/swiper-bundle.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="assets/js/jquery.counterup.min.js"></script>
-    <script src="assets/js/jquery-ui.min.js"></script>
     <script src="assets/js/imagesloaded.pkgd.min.js"></script>
     <script src="assets/js/isotope.pkgd.min.js"></script>
-    <script src="assets/js/gsap.min.js"></script>
-    <script src="assets/js/circle-progress.js"></script>
-    <script src="assets/js/matter.min.js"></script>
-    <script src="assets/js/matterjs-custom.js"></script>
     <script src="assets/js/nice-select.min.js"></script>
+    <script src="assets/js/circle-progress.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js"></script>
+    <!-- Animation Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        // Initialize nice-select only if elements exist
+        $(document).ready(function() {
+            if (typeof $.fn.niceSelect !== 'undefined' && $('.nice-select-enabled').length > 0) {
+                $('.nice-select-enabled').niceSelect();
+            }
+        });
+    </script>
     <script src="assets/js/main.js"></script>
 
     <script>

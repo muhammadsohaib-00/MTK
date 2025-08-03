@@ -1627,3 +1627,27 @@ $(".to").text("$" + $(".price_slider").slider("values", 1));
     //   }   
 
 })(jQuery);
+
+// Safe intersection observer initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if IntersectionObserver is supported
+    if ('IntersectionObserver' in window) {
+        const elements = document.querySelectorAll('[data-animate]');
+        if (elements.length > 0) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.target instanceof Element) {
+                        // Add animation logic here
+                        entry.target.classList.add('animated');
+                    }
+                });
+            });
+
+            elements.forEach(element => {
+                if (element instanceof Element) {
+                    observer.observe(element);
+                }
+            });
+        }
+    }
+});
