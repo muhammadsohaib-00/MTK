@@ -485,6 +485,10 @@
         async function handleCreateEvent(e) {
             e.preventDefault();
             
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const editId = submitBtn.getAttribute('data-edit-id');
+            const isEditing = !!editId;
+            
             const eventData = {
                 title: document.getElementById('eventTitle').value,
                 description: document.getElementById('eventDescription').value,
@@ -502,8 +506,11 @@
             };
             
             try {
-                const response = await fetch('/api/admin/events', {
-                    method: 'POST',
+                const url = isEditing ? `/api/admin/events/${editId}` : '/api/admin/events';
+                const method = isEditing ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(eventData)
                 });
@@ -511,19 +518,24 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    alert('Event created successfully!');
-                    document.getElementById('createEventForm').reset();
+                    alert(`Event ${isEditing ? 'updated' : 'created'} successfully!`);
+                    
+                    if (isEditing) {
+                        cancelEdit();
+                    } else {
+                        document.getElementById('createEventForm').reset();
+                    }
                     
                     // Switch to events tab and refresh
                     document.getElementById('events-tab').click();
                     await loadEvents();
                     updateStats();
                 } else {
-                    alert('Failed to create event: ' + data.message);
+                    alert(`Failed to ${isEditing ? 'update' : 'create'} event: ` + data.message);
                 }
             } catch (error) {
-                alert('Error creating event. Please try again.');
-                console.error('Create event error:', error);
+                alert(`Error ${isEditing ? 'updating' : 'creating'} event. Please try again.`);
+                console.error(`${isEditing ? 'Update' : 'Create'} event error:`, error);
             }
         }
 
@@ -611,8 +623,60 @@
         }
 
         function editEvent(eventId) {
-            // For now, just show an alert. You can implement edit functionality later
-            alert('Edit functionality will be implemented in the next update!');
+            const event = allEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            // Populate the form with existing event data
+            document.getElementById('eventTitle').value = event.title;
+            document.getElementById('eventDescription').value = event.description;
+            document.getElementById('eventCategory').value = event.category;
+            document.getElementById('eventDate').value = event.date;
+            document.getElementById('eventTime').value = event.time;
+            document.getElementById('eventDuration').value = event.duration || '';
+            document.getElementById('eventCapacity').value = event.capacity;
+            document.getElementById('eventAmount').value = event.amount;
+            document.getElementById('eventInstructor').value = event.instructor || '';
+            document.getElementById('eventLocation').value = event.location || '';
+            document.getElementById('eventAgeGroup').value = event.age_group || '';
+            document.getElementById('eventSkillLevel').value = event.skill_level;
+            document.getElementById('eventImageUrl').value = event.image_url || '';
+            
+            // Switch to create tab and change form behavior
+            document.getElementById('create-tab').click();
+            
+            // Change form title and button text
+            document.querySelector('#create h4').textContent = 'Edit Event';
+            const submitBtn = document.querySelector('#createEventForm button[type="submit"]');
+            submitBtn.textContent = 'Update Event';
+            submitBtn.setAttribute('data-edit-id', eventId);
+            
+            // Add cancel edit button
+            if (!document.getElementById('cancelEditBtn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.className = 'btn btn-secondary btn-lg';
+                cancelBtn.id = 'cancelEditBtn';
+                cancelBtn.textContent = 'Cancel Edit';
+                cancelBtn.onclick = cancelEdit;
+                submitBtn.parentNode.insertBefore(cancelBtn, submitBtn.nextSibling);
+            }
+        }
+        
+        function cancelEdit() {
+            // Reset form
+            document.getElementById('createEventForm').reset();
+            
+            // Reset form title and button
+            document.querySelector('#create h4').textContent = 'Create New Event/Class';
+            const submitBtn = document.querySelector('#createEventForm button[type="submit"]');
+            submitBtn.textContent = 'Create Event';
+            submitBtn.removeAttribute('data-edit-id');
+            
+            // Remove cancel button
+            const cancelBtn = document.getElementById('cancelEditBtn');
+            if (cancelBtn) {
+                cancelBtn.remove();
+            }
         }
 
         async function deleteEvent(eventId) {

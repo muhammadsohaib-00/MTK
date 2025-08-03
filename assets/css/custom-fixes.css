@@ -390,3 +390,51 @@ main, .main-content {
     width: 100%;
     height: 100%;
 }
+/* Custom fixes and additional styles */
+
+/* Magic Cursor Styles */
+.magic-cursor {
+    position: relative;
+    z-index: 999999;
+}
+
+.cursor {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    border-radius: 100%;
+    z-index: 9999999;
+    pointer-events: none;
+    user-select: none;
+    transform: scale(0.8);
+    transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform, 
+                0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity;
+}
+
+.cursor.active {
+    opacity: 1;
+    transform: scale(8);
+    background: rgba(17, 61, 72, 0.7);
+    backdrop-filter: blur(6px);
+}
+
+.cursor-follower {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+    z-index: 99999999;
+    background-color: #667eea;
+    transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform, 
+                0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 
+                0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) background;
+    user-select: none;
+    pointer-events: none;
+    transform: translate(8px, 8px);
+}
+
+.cursor-follower.active {
+    opacity: 1;
+    transform: scale(0);
+}
