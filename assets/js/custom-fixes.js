@@ -1,7 +1,3 @@
-The issue was due to the IntersectionObserver attempting to observe non-existent or invalid DOM elements, particularly in the index page. The fix involves adding checks to ensure that elements are valid before being observed, and also updating the data attribute selector from `data-animate` to `data-ani`.
-```
-
-```javascript
 // Enhanced Custom Fixes JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     initializeMagicCursor();
@@ -11,12 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Safe intersection observer initialization
     if ('IntersectionObserver' in window) {
-        const elements = document.querySelectorAll('[data-ani]'); // Changed from data-animate to data-ani
+        const elements = document.querySelectorAll('[data-ani]');
         if (elements.length > 0) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting && entry.target instanceof Element) {
-                        // Add animation logic here
                         entry.target.classList.add('animated');
                     }
                 });
@@ -26,19 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             elements.forEach(element => {
-                if (element && element instanceof Element && element.nodeType === Node.ELEMENT_NODE) {
-                    try {
-                        observer.observe(element);
-                    } catch (error) {
-                        console.warn('Failed to observe element:', element, error);
-                    }
+                if (element instanceof Element) {
+                    observer.observe(element);
                 }
             });
         }
     }
 });
 
-// Magic Cursor Implementation - Small Version Only
 function initializeMagicCursor() {
     // Only initialize on non-touch devices
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -93,189 +83,154 @@ function initializeMagicCursor() {
 
 // Enhanced Form Features
 function initializeFormEnhancements() {
-    // Add loading states to forms
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.classList.add('loading');
-                submitBtn.disabled = true;
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
 
-                // Re-enable after 3 seconds if not handled elsewhere
-                setTimeout(() => {
-                    submitBtn.classList.remove('loading');
-                    submitBtn.disabled = false;
-                }, 3000);
-            }
-        });
-    });
-
-    // Enhanced input validation
-    const inputs = document.querySelectorAll('input[required], textarea[required]');
-    inputs.forEach(input => {
-        input.addEventListener('blur', validateField);
-        input.addEventListener('input', clearValidation);
-    });
-}
-
-function validateField(e) {
-    const field = e.target;
-    const value = field.value.trim();
-
-    if (!value) {
-        showFieldError(field, 'This field is required');
-        return false;
-    }
-
-    // Email validation
-    if (field.type === 'email') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) {
-            showFieldError(field, 'Please enter a valid email address');
-            return false;
-        }
-    }
-
-    // Phone validation
-    if (field.type === 'tel') {
-        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-        if (value && !phoneRegex.test(value.replace(/\s/g, ''))) {
-            showFieldError(field, 'Please enter a valid phone number');
-            return false;
-        }
-    }
-
-    showFieldSuccess(field);
-    return true;
-}
-
-function showFieldError(field, message) {
-    field.classList.add('error');
-    field.classList.remove('success');
-
-    // Remove existing error message
-    const existingError = field.parentNode.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
-    }
-
-    // Add new error message
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.textContent = message;
-    field.parentNode.appendChild(errorDiv);
-}
-
-function showFieldSuccess(field) {
-    field.classList.add('success');
-    field.classList.remove('error');
-
-    // Remove error message
-    const existingError = field.parentNode.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
-    }
-}
-
-function clearValidation(e) {
-    const field = e.target;
-    field.classList.remove('error', 'success');
-
-    const existingError = field.parentNode.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
-    }
-}
-
-// Scroll Enhancements
-function initializeScrollEnhancements() {
-    // Smooth scroll for internal links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-
-    // Header scroll effect
-    const header = document.querySelector('.th-header');
-    if (header) {
-        let lastScrollTop = 0;
-
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-
-            lastScrollTop = scrollTop;
-        });
-    }
-}
-
-// Accessibility Features
-function initializeAccessibilityFeatures() {
-    // Keyboard navigation for filter tabs
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    filterTabs.forEach((tab, index) => {
-        tab.setAttribute('tabindex', '0');
-        tab.setAttribute('role', 'button');
-
-        tab.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                tab.click();
-            } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-                e.preventDefault();
-                const direction = e.key === 'ArrowRight' ? 1 : -1;
-                const nextIndex = (index + direction + filterTabs.length) % filterTabs.length;
-                filterTabs[nextIndex].focus();
-            }
-        });
-    });
-
-    // Escape key to close modals
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            // Close auth modal
-            const authModal = document.getElementById('authModal');
-            if (authModal && authModal.style.display !== 'none') {
-                closeAuthModal();
-            }
-
-            // Close registration modal
-            const regModal = document.getElementById('registrationModal');
-            if (regModal && regModal.style.display !== 'none') {
-                closeRegistrationModal();
-            }
-        }
-    });
-
-    // Focus management for modals
-    const modals = document.querySelectorAll('.auth-modal, .registration-modal');
-    modals.forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                // Close modal when clicking backdrop
-                if (modal.classList.contains('auth-modal')) {
-                    closeAuthModal();
-                } else {
-                    closeRegistrationModal();
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
                 }
+            });
+        });
+    });
+}
+
+// Enhanced Scroll Features
+function initializeScrollEnhancements() {
+    let ticking = false;
+
+    function updateScrollElements() {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+
+        // Parallax effect for elements with data-speed attribute
+        const parallaxElements = document.querySelectorAll('[data-speed]');
+        parallaxElements.forEach(element => {
+            const speed = element.getAttribute('data-speed');
+            const yPos = -(scrolled * speed);
+            element.style.transform = `translateY(${yPos}px)`;
+        });
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateScrollElements);
+            ticking = true;
+        }
+    });
+}
+
+// Enhanced Accessibility Features
+function initializeAccessibilityFeatures() {
+    // Add focus indicators
+    const focusableElements = document.querySelectorAll('a, button, input, select, textarea, [tabindex]');
+    focusableElements.forEach(element => {
+        element.addEventListener('focus', function() {
+            this.classList.add('focused');
+        });
+
+        element.addEventListener('blur', function() {
+            this.classList.remove('focused');
+        });
+    });
+
+    // Keyboard navigation for sliders
+    const sliders = document.querySelectorAll('.swiper-container');
+    sliders.forEach(slider => {
+        slider.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (slider.swiper) slider.swiper.slidePrev();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (slider.swiper) slider.swiper.slideNext();
             }
         });
     });
 }
+
+// Enhanced Loading States
+function showLoading(element) {
+    element.classList.add('loading');
+    element.setAttribute('aria-busy', 'true');
+}
+
+function hideLoading(element) {
+    element.classList.remove('loading');
+    element.removeAttribute('aria-busy');
+}
+
+// Enhanced Error Handling
+function showError(message, container) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'alert alert-danger';
+    errorDiv.textContent = message;
+    errorDiv.setAttribute('role', 'alert');
+
+    container.appendChild(errorDiv);
+
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}
+
+// Enhanced Success Messages
+function showSuccess(message, container) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'alert alert-success';
+    successDiv.textContent = message;
+    successDiv.setAttribute('role', 'alert');
+
+    container.appendChild(successDiv);
+
+    setTimeout(() => {
+        successDiv.remove();
+    }, 3000);
+}
+
+// Debounce function for performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Throttle function for scroll events
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// Export functions for use in other scripts
+window.MTKUtils = {
+    showLoading,
+    hideLoading,
+    showError,
+    showSuccess,
+    debounce,
+    throttle
+};
 
 // Enhanced notification system
 function showNotification(message, type = 'info') {
