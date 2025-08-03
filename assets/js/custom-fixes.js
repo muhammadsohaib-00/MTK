@@ -1,4 +1,3 @@
-
 // Enhanced Custom Fixes JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     initializeMagicCursor();
@@ -47,7 +46,7 @@ function initializeMagicCursor() {
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                
+
                 // Update cursor position immediately
                 cursor.style.left = mouseX + 'px';
                 cursor.style.top = mouseY + 'px';
@@ -417,3 +416,94 @@ document.head.appendChild(notificationStyles);
 // Export functions for global use
 window.showNotification = showNotification;
 window.validateField = validateField;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize cursor following effect for all pages
+    initializeCursor();
+
+    // Initialize other components
+    initializeContactForm();
+
+    // Fix mobile menu
+    fixMobileMenu();
+});
+
+function initializeCursor() {
+    const cursor = document.querySelector('.cursor');
+    const follower = document.querySelector('.cursor-follower');
+    const magicCursor = document.querySelector('.magic-cursor');
+
+    if (!cursor || !follower || !magicCursor) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+    let followerX = 0;
+    let followerY = 0;
+
+    // Show cursor elements
+    magicCursor.style.display = 'block';
+    cursor.style.display = 'block';
+    follower.style.display = 'block';
+
+    // Mouse move handler with proper positioning
+    function handleMouseMove(e) {
+        mouseX = e.pageX || e.clientX + window.scrollX;
+        mouseY = e.pageY || e.clientY + window.scrollY;
+    }
+
+    // Animate cursor with smooth following
+    function animateCursor() {
+        // Main cursor follows immediately with offset
+        cursorX += (mouseX - cursorX) * 0.9;
+        cursorY += (mouseY - cursorY) * 0.9;
+
+        // Follower has more delay
+        followerX += (mouseX - followerX) * 0.15;
+        followerY += (mouseY - followerY) * 0.15;
+
+        // Apply transforms with proper positioning
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        follower.style.left = followerX + 'px';
+        follower.style.top = followerY + 'px';
+
+        requestAnimationFrame(animateCursor);
+    }
+
+    // Add event listeners for better coverage
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('scroll', function() {
+        // Update cursor position on scroll
+        handleMouseMove({ 
+            pageX: mouseX, 
+            pageY: mouseY,
+            clientX: mouseX - window.scrollX,
+            clientY: mouseY - window.scrollY
+        });
+    }, { passive: true });
+
+    document.addEventListener('mouseenter', function() {
+        magicCursor.style.opacity = '1';
+    });
+    document.addEventListener('mouseleave', function() {
+        magicCursor.style.opacity = '0';
+    });
+
+    // Handle hover effects on interactive elements
+    const hoverElements = document.querySelectorAll('a, button, .th-btn, .btn, [role="button"], input, textarea, select');
+    hoverElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            cursor.classList.add('hover');
+            follower.classList.add('hover');
+        });
+        element.addEventListener('mouseleave', function() {
+            cursor.classList.remove('hover');
+            follower.classList.remove('hover');
+        });
+    });
+
+    // Start animation
+    requestAnimationFrame(animateCursor);
+}
