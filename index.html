@@ -58,6 +58,8 @@ html
     <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
     <!-- Theme Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Responsive Grid System -->
+    <link rel="stylesheet" href="assets/css/responsive-grid.css">
     <!-- Custom Fixes -->
     <link rel="stylesheet" href="assets/css/custom-fixes.css">
 
@@ -1615,13 +1617,14 @@ Footer Area
 
     <!-- Auth script -->
     <script>
-        let currentUser = null;
+        // Authentication functionality
+        let authCurrentUser = null;
 
         // Function to update the authentication UI
         function updateAuthUI() {
             const authLink = document.getElementById('authLink');
-            if (currentUser) {
-                authLink.innerHTML = `<a href="#" onclick="logout()">Logout ${currentUser.email}<i class="fa-regular fa-user"></i></a>`;
+            if (authCurrentUser) {
+                authLink.innerHTML = `<a href="#" onclick="logout()">Logout ${authCurrentUser.email}<i class="fa-regular fa-user"></i></a>`;
             } else {
                 authLink.innerHTML = `<a href="#" onclick="showAuthModal()">Sign In / Register<i class="fa-regular fa-user"></i></a>`;
             }
@@ -1634,9 +1637,9 @@ Footer Area
                 const data = await response.json();
 
                 if (data.success) {
-                    currentUser = data.user;
+                    authCurrentUser = data.user;
                 } else {
-                    currentUser = null;
+                    authCurrentUser = null;
                 }
                 updateAuthUI();
             } catch (error) {
@@ -1669,7 +1672,7 @@ Footer Area
         async function logout() {
             try {
                 await fetch('/api/logout', { method: 'POST' });
-                currentUser = null;
+                authCurrentUser = null;
                 updateAuthUI();
                 alert('Logged out successfully!');
             } catch (error) {
@@ -1737,7 +1740,7 @@ Footer Area
                 const data = await response.json();
 
                 if (data.success) {
-                    currentUser = data.user;
+                    authCurrentUser = data.user;
                     updateAuthUI();
                     closeAuthModal();
 

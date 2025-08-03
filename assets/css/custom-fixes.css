@@ -1,3 +1,715 @@
+/* Custom fixes for MTK website - Comprehensive responsive design */
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Container responsive fixes */
+.container,
+.container-fluid {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.th-container {
+    width: 100%;
+    max-width: 1320px;
+    padding-left: 24px;
+    padding-right: 24px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Header responsive fixes */
+.th-header {
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+}
+
+.header-top {
+    padding: 8px 0;
+}
+
+.menu-area {
+    padding: 15px 0;
+}
+
+.header-logo img {
+    max-width: 150px;
+    height: auto;
+}
+
+.main-menu > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.main-menu > ul > li {
+    margin: 0 10px;
+}
+
+.main-menu > ul > li > a {
+    padding: 15px 0;
+    white-space: nowrap;
+}
+
+/* Hero section responsive */
+.th-hero-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+}
+
+.hero-inner {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.th-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-style1 {
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: clamp(28px, 5vw, 80px);
+    line-height: 1.2;
+    margin: 20px 0;
+}
+
+.sub-title {
+    font-size: clamp(16px, 3vw, 40px);
+    margin-bottom: 15px;
+}
+
+/* Button groups responsive */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.th-btn {
+    padding: clamp(12px, 2vw, 18px) clamp(20px, 3vw, 35px);
+    font-size: clamp(14px, 1.5vw, 16px);
+    border-radius: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+/* Grid system responsive */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+.col,
+[class*="col-"] {
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+/* Category section responsive */
+.category-area {
+    padding: clamp(40px, 8vw, 120px) 0;
+}
+
+.category-card {
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.box-img {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.box-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.box-img:hover img {
+    transform: scale(1.1);
+}
+
+/* About section responsive */
+.about-area {
+    padding: clamp(40px, 8vw, 120px) 0;
+}
+
+.img-box1 {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    height: 500px;
+}
+
+.img-box1 .img1 {
+    grid-column: 1;
+    grid-row: 1 / 3;
+}
+
+.img-box1 .img2 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.img-box1 .img3 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.img-box1 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Service/Events section responsive */
+.tour-box {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.tour-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.tour-box_img {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.tour-box_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tour-box:hover .tour-box_img img {
+    transform: scale(1.1);
+}
+
+.tour-content {
+    padding: 25px;
+}
+
+/* Gallery responsive */
+.gallery-area {
+    padding: clamp(40px, 8vw, 80px) 0;
+}
+
+.gallery-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.gallery-card .box-img {
+    height: 200px;
+}
+
+/* Counter section responsive */
+.counter-area {
+    padding: clamp(40px, 8vw, 120px) 0;
+}
+
+.counter-card {
+    text-align: center;
+    padding: 30px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.counter-card:hover {
+    transform: translateY(-5px);
+}
+
+.box-number {
+    font-size: clamp(30px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--theme-color);
+    margin-bottom: 10px;
+}
+
+/* Team section responsive */
+.team-box {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.team-box:hover {
+    transform: translateY(-5px);
+}
+
+.team-img {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.team-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-content {
+    padding: 25px;
+    text-align: center;
+}
+
+/* Testimonial responsive */
+.testi-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin: 20px 10px;
+    transition: transform 0.3s ease;
+}
+
+.testi-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Footer responsive */
+.footer-wrapper {
+    position: relative;
+    margin-top: 50px;
+    clear: both;
+    width: 100%;
+}
+
+.footer-area {
+    width: 100%;
+    background: var(--title-color);
+    color: white;
+}
+
+.widget-area {
+    padding: clamp(50px, 8vw, 100px) 0 clamp(30px, 5vw, 46px);
+}
+
+.footer-widget {
+    margin-bottom: 40px;
+}
+
+.copyright-area {
+    padding: 20px 0;
+    background: rgba(0,0,0,0.2);
+}
+
+/* Swiper responsive fixes */
+.swiper {
+    width: 100%;
+    overflow: hidden;
+}
+
+.swiper-wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+.swiper-slide {
+    flex-shrink: 0;
+    width: auto;
+    height: auto;
+    position: relative;
+}
+
+/* Auth modal responsive */
+.auth-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    padding: 20px;
+}
+
+.auth-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Responsive breakpoints */
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .th-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+        line-height: 1.3;
+    }
+
+    .sub-title {
+        font-size: 18px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .th-btn {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .main-menu > ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .img-box1 {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 15px;
+    }
+
+    .img-box1 .img1,
+    .img-box1 .img2,
+    .img-box1 .img3 {
+        grid-column: 1;
+        grid-row: auto;
+        height: 200px;
+    }
+
+    .auth-modal-content {
+        padding: 20px;
+        margin: 20px;
+        width: calc(100% - 40px);
+    }
+
+    .header-logo img {
+        max-width: 120px;
+    }
+
+    .logo-bg {
+        display: none !important;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .sub-title {
+        font-size: 22px;
+    }
+
+    .col-sm-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .img-box1 {
+        height: 400px;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 33.333333%;
+    }
+
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+
+    .hero-title {
+        font-size: 48px;
+    }
+
+    .btn-group {
+        flex-direction: row;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .col-lg-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .col-lg-4 {
+        flex: 0 0 auto;
+        width: 33.333333%;
+    }
+
+    .col-lg-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+
+    .col-lg-2 {
+        flex: 0 0 auto;
+        width: 16.666667%;
+    }
+
+    .hero-title {
+        font-size: 60px;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .col-xl-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .col-xl-4 {
+        flex: 0 0 auto;
+        width: 33.333333%;
+    }
+
+    .col-xl-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+
+    .col-xl-2 {
+        flex: 0 0 auto;
+        width: 16.666667%;
+    }
+
+    .hero-title {
+        font-size: 70px;
+    }
+}
+
+/* Extra extra large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {
+    .hero-title {
+        font-size: 80px;
+    }
+
+    .th-container {
+        max-width: 1320px;
+    }
+}
+
+/* High resolution devices */
+@media (min-width: 1600px) {
+    .th-container {
+        max-width: 1540px;
+    }
+}
+
+/* Fix for video elements */
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slide-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Form responsive */
+.form-control,
+.form-select {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+/* Navigation responsive */
+.navbar-nav {
+    width: 100%;
+}
+
+.navbar-nav .nav-link {
+    padding: 10px 15px;
+}
+
+/* Utility classes for responsive design */
+.w-100 { width: 100% !important; }
+.h-100 { height: 100% !important; }
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+@media (max-width: 767.98px) {
+    .d-md-none { display: none !important; }
+    .d-md-block { display: block !important; }
+}
+
+@media (min-width: 768px) {
+    .d-md-block { display: block !important; }
+    .d-md-none { display: none !important; }
+}
+
+@media (max-width: 991.98px) {
+    .d-lg-none { display: none !important; }
+}
+
+@media (min-width: 992px) {
+    .d-lg-block { display: block !important; }
+    .d-lg-none { display: none !important; }
+}
+
+@media (max-width: 1199.98px) {
+    .d-xl-none { display: none !important; }
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block { display: block !important; }
+    .d-xl-none { display: none !important; }
+}
+
+/* Prevent horizontal scroll */
+body, html {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Fix any elements that might cause horizontal scroll */
+* {
+    max-width: 100%;
+}
+
+img, video, iframe, object, embed {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ensure all containers stay within viewport */
+.container,
+.container-fluid,
+.th-container {
+    overflow-x: hidden;
+}
+
+/* Magic cursor fixes */
+.magic-cursor {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.cursor,
+.cursor-follower {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+}
 /* Custom Fixes for M T K Website */
 
 /* Navbar Fixes */
