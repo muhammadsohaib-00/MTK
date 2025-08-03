@@ -2844,14 +2844,13 @@ hr.title-line {
 }
 
 .cursor-follower.active {
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%) scale(1.2);
   border-color: #764ba2;
 }
 
 .cursor {
   position: fixed;
   background: #667eea;
-  cursor: pointer;
   width: 8px;
   height: 8px;
   line-height: 8px;
@@ -2870,6 +2869,12 @@ hr.title-line {
       -ms-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
   mix-blend-mode: difference;
+}
+
+.cursor.active {
+  -webkit-transform: translate(-50%, -50%) scale(1.5);
+      -ms-transform: translate(-50%, -50%) scale(1.5);
+          transform: translate(-50%, -50%) scale(1.5);
 }
 
 .cursor:before {

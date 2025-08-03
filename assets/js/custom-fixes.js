@@ -1,3 +1,4 @@
+
 // Enhanced Custom Fixes JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     initializeMagicCursor();
@@ -36,70 +37,67 @@ function initializeMagicCursor() {
         const follower = document.querySelector('.cursor-follower');
 
         if (cursor && follower) {
-            // Make cursors visible
-            cursor.style.display = 'block';
-            cursor.style.opacity = '1';
-            follower.style.display = 'block';
-            follower.style.opacity = '1';
+            let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
 
-            let cursorX = 0, cursorY = 0;
-            let followerX = 0, followerY = 0;
+            // Hide default cursor globally
+            document.body.style.cursor = 'none';
+            document.documentElement.style.cursor = 'none';
 
-            // Update cursor position - use pageX/pageY for scroll support
+            // Update cursor position immediately
             document.addEventListener('mousemove', (e) => {
-                cursorX = e.pageX;
-                cursorY = e.pageY;
-
-                cursor.style.left = cursorX + 'px';
-                cursor.style.top = cursorY + 'px';
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Update cursor position immediately
+                cursor.style.left = mouseX + 'px';
+                cursor.style.top = mouseY + 'px';
                 cursor.style.transform = 'translate(-50%, -50%)';
             });
 
-            // Animate follower with smooth easing
+            // Smooth follower animation
             function animateFollower() {
                 const delay = 0.08;
-                followerX += (cursorX - followerX) * delay;
-                followerY += (cursorY - followerY) * delay;
+                posX += (mouseX - posX) * delay;
+                posY += (mouseY - posY) * delay;
 
-                follower.style.left = followerX + 'px';
-                follower.style.top = followerY + 'px';
+                follower.style.left = posX + 'px';
+                follower.style.top = posY + 'px';
                 follower.style.transform = 'translate(-50%, -50%)';
 
                 requestAnimationFrame(animateFollower);
             }
             animateFollower();
 
-            // Simple hover effects for interactive elements
-            const hoverElements = document.querySelectorAll('a, button, .btn, .th-btn, .filter-tab, .swiper-slide, .gallery-card, .team-box, .tour-box');
+            // Enhanced hover effects for all interactive elements
+            const hoverElements = document.querySelectorAll('a, button, .btn, .th-btn, input[type="submit"], input[type="button"], .filter-tab, .swiper-slide, .gallery-card, .team-box, .tour-box, .icon-btn, .play-btn, .th-social a, .link-btn, .line-btn, .nav-link, .dropdown-item, [role="button"], [onclick], .clickable');
 
             hoverElements.forEach(element => {
                 element.addEventListener('mouseenter', () => {
-                    cursor.style.transform = 'translate(-50%, -50%) scale(1.2)';
-                    follower.style.transform = 'translate(-50%, -50%) scale(1.1)';
-                    follower.style.borderColor = '#764ba2';
+                    cursor.classList.add('active');
+                    follower.classList.add('active');
                 });
 
                 element.addEventListener('mouseleave', () => {
-                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                    follower.style.transform = 'translate(-50%, -50%) scale(1)';
-                    follower.style.borderColor = '#667eea';
+                    cursor.classList.remove('active');
+                    follower.classList.remove('active');
                 });
             });
 
-            // Hide default cursor on body
-            document.body.style.cursor = 'none';
-            
-            // Show custom cursor on mouse enter
+            // Show cursors when mouse is over the page
             document.addEventListener('mouseenter', () => {
                 cursor.style.opacity = '1';
                 follower.style.opacity = '1';
             });
 
-            // Hide custom cursor on mouse leave
+            // Hide cursors when mouse leaves the page
             document.addEventListener('mouseleave', () => {
                 cursor.style.opacity = '0';
                 follower.style.opacity = '0';
             });
+
+            // Initialize visibility
+            cursor.style.opacity = '1';
+            follower.style.opacity = '1';
         }
     }
 }
@@ -129,7 +127,6 @@ function initializeScrollEnhancements() {
 
     function updateScrollElements() {
         const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
 
         // Parallax effect for elements with data-speed attribute
         const parallaxElements = document.querySelectorAll('[data-speed]');
@@ -177,6 +174,49 @@ function initializeAccessibilityFeatures() {
             }
         });
     });
+}
+
+// Form validation function
+function validateField(field) {
+    const value = field.value.trim();
+    const type = field.type;
+    let isValid = true;
+    let message = '';
+
+    // Check if field is required and empty
+    if (field.hasAttribute('required') && !value) {
+        isValid = false;
+        message = 'This field is required';
+    }
+
+    // Email validation
+    if (type === 'email' && value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            isValid = false;
+            message = 'Please enter a valid email address';
+        }
+    }
+
+    // Phone validation
+    if (type === 'tel' && value) {
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+            isValid = false;
+            message = 'Please enter a valid phone number';
+        }
+    }
+
+    // Update field appearance
+    if (isValid) {
+        field.classList.remove('is-invalid');
+        field.classList.add('is-valid');
+    } else {
+        field.classList.remove('is-valid');
+        field.classList.add('is-invalid');
+    }
+
+    return { isValid, message };
 }
 
 // Enhanced Loading States
@@ -292,7 +332,7 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Add CSS for notifications
+// Add CSS for notifications and cursor improvements
 const notificationStyles = document.createElement('style');
 notificationStyles.textContent = `
     @keyframes slideIn {
@@ -330,6 +370,46 @@ notificationStyles.textContent = `
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Enhanced cursor styles */
+    .cursor {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #667eea;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999999;
+        mix-blend-mode: difference;
+        transition: transform 0.15s ease-out;
+    }
+
+    .cursor-follower {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 2px solid #667eea;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999998;
+        transition: transform 0.15s ease-out, border-color 0.15s ease-out;
+    }
+
+    .cursor.active {
+        transform: translate(-50%, -50%) scale(1.5) !important;
+    }
+
+    .cursor-follower.active {
+        transform: translate(-50%, -50%) scale(1.2) !important;
+        border-color: #764ba2;
+    }
+
+    /* Hide cursor on touch devices */
+    @media (hover: none) and (pointer: coarse) {
+        .cursor, .cursor-follower {
+            display: none !important;
+        }
     }
 `;
 document.head.appendChild(notificationStyles);
