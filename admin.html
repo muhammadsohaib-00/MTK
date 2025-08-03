@@ -620,8 +620,24 @@
                 return;
             }
             
-            // For now, just show an alert. You can implement delete functionality later
-            alert('Delete functionality will be implemented in the next update!');
+            try {
+                const response = await fetch(`/api/admin/events/${eventId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Event deleted successfully!');
+                    await loadEvents();
+                    updateStats();
+                } else {
+                    alert('Failed to delete event: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error deleting event. Please try again.');
+                console.error('Delete event error:', error);
+            }
         }
 
         function refreshEvents() {

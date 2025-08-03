@@ -144,12 +144,20 @@ function createSampleEvents() {
     db.get(checkEvents, [], (err, row) => {
         if (err || row.count > 0) return;
         
+        // Get future dates
+        const today = new Date();
+        const getDateString = (daysFromNow) => {
+            const date = new Date(today);
+            date.setDate(date.getDate() + daysFromNow);
+            return date.toISOString().split('T')[0];
+        };
+
         const sampleEvents = [
             {
                 title: 'Beginner Ballet Dancing',
                 description: 'Learn the fundamentals of ballet dancing with our experienced instructors. Perfect for beginners aged 8-12.',
                 category: 'dancing',
-                date: '2024-02-15',
+                date: getDateString(7),
                 time: '10:00',
                 duration: '2 hours',
                 capacity: 15,
@@ -163,7 +171,7 @@ function createSampleEvents() {
                 title: 'Vocal Training Workshop',
                 description: 'Improve your singing voice with professional vocal training techniques and exercises.',
                 category: 'singing',
-                date: '2024-02-18',
+                date: getDateString(10),
                 time: '14:00',
                 duration: '1.5 hours',
                 capacity: 12,
@@ -177,7 +185,7 @@ function createSampleEvents() {
                 title: 'Acting for Theatre',
                 description: 'Develop your acting skills for stage performances with character development and scene work.',
                 category: 'acting',
-                date: '2024-02-20',
+                date: getDateString(14),
                 time: '16:00',
                 duration: '3 hours',
                 capacity: 10,
@@ -191,7 +199,7 @@ function createSampleEvents() {
                 title: 'Creative Script Writing',
                 description: 'Learn the art of writing engaging scripts for theatre, film, and television.',
                 category: 'script_writing',
-                date: '2024-02-22',
+                date: getDateString(17),
                 time: '11:00',
                 duration: '2.5 hours',
                 capacity: 8,
@@ -205,7 +213,7 @@ function createSampleEvents() {
                 title: 'Jazz Dance Intensive',
                 description: 'High-energy jazz dance class focusing on technique, style, and performance.',
                 category: 'dancing',
-                date: '2024-02-25',
+                date: getDateString(21),
                 time: '13:00',
                 duration: '2 hours',
                 capacity: 20,
@@ -214,6 +222,20 @@ function createSampleEvents() {
                 location: 'Studio B',
                 age_group: '13-17 years',
                 skill_level: 'intermediate'
+            },
+            {
+                title: 'Advanced Acting Masterclass',
+                description: 'Take your acting skills to the next level with advanced techniques and professional coaching.',
+                category: 'acting',
+                date: getDateString(24),
+                time: '15:00',
+                duration: '3 hours',
+                capacity: 8,
+                amount: 65.00,
+                instructor: 'Emma Davis',
+                location: 'Main Theatre',
+                age_group: '16+ years',
+                skill_level: 'advanced'
             }
         ];
         
@@ -368,7 +390,7 @@ app.get('/api/events', async (req, res) => {
             SELECT e.*, 
                    (e.capacity - e.registered_count) as available_slots
             FROM events e 
-            WHERE e.status = 'upcoming' AND e.date >= date('now')
+            WHERE e.status IN ('upcoming', 'ongoing') AND e.date >= date('now', '-1 day')
             ORDER BY e.date ASC, e.time ASC
         `;
         
@@ -515,6 +537,77 @@ app.get('/api/admin/events/:id/registrations', requireAdmin, async (req, res) =>
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Error fetching registrations' });
+    }
+});
+
+// Admin: Delete event
+app.delete('/api/admin/events/:id', requireAdmin, async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        
+        // First delete all registrations for this event
+        const deleteRegistrations = 'DELETE FROM registrations WHERE event_id = ?';
+        
+        db.run(deleteRegistrations, [eventId], (err) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Failed to delete event registrations' });
+            }
+            
+            // Then delete the event itself
+            const deleteEvent = 'DELETE FROM events WHERE id = ?';
+            
+            db.run(deleteEvent, [eventId], function(err) {
+                if (err) {
+                    return res.status(500).json({ success: false, message: 'Failed to delete event' });
+                }
+                
+                if (this.changes === 0) {
+                    return res.status(404).json({ success: false, message: 'Event not found' });
+                }
+                
+                res.json({ success: true, message: 'Event deleted successfully' });
+            });
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to delete event' });
+    }
+});
+
+// Admin: Update event
+app.put('/api/admin/events/:id', requireAdmin, async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const {
+            title, description, category, date, time, duration, capacity, 
+            amount, instructor, location, age_group, skill_level, image_url
+        } = req.body;
+        
+        const query = `
+            UPDATE events SET 
+                title = ?, description = ?, category = ?, date = ?, time = ?, 
+                duration = ?, capacity = ?, amount = ?, instructor = ?, 
+                location = ?, age_group = ?, skill_level = ?, image_url = ?
+            WHERE id = ?
+        `;
+        
+        const values = [
+            title, description, category, date, time, duration, capacity,
+            amount, instructor, location, age_group, skill_level, image_url, eventId
+        ];
+        
+        db.run(query, values, function(err) {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Failed to update event' });
+            }
+            
+            if (this.changes === 0) {
+                return res.status(404).json({ success: false, message: 'Event not found' });
+            }
+            
+            res.json({ success: true, message: 'Event updated successfully' });
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to update event' });
     }
 });
 
