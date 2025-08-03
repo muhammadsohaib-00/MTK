@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAccessibilityFeatures();
 });
 
-// Magic Cursor Implementation
+// Magic Cursor Implementation - Small Version Only
 function initializeMagicCursor() {
     // Only initialize on non-touch devices
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -27,9 +27,9 @@ function initializeMagicCursor() {
                 cursor.style.top = cursorY + 'px';
             });
             
-            // Animate follower with easing
+            // Animate follower with smooth easing
             function animateFollower() {
-                const delay = 0.1;
+                const delay = 0.08;
                 followerX += (cursorX - followerX) * delay;
                 followerY += (cursorY - followerY) * delay;
                 
@@ -40,14 +40,14 @@ function initializeMagicCursor() {
             }
             animateFollower();
             
-            // Cursor hover effects
+            // Simple hover effects for interactive elements
             const hoverElements = document.querySelectorAll('a, button, .btn, .th-btn, .filter-tab');
             
             hoverElements.forEach(element => {
                 element.addEventListener('mouseenter', () => {
-                    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                    follower.style.transform = 'translate(-50%, -50%) scale(1.2)';
-                    follower.style.borderColor = '#667eea';
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1.2)';
+                    follower.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                    follower.style.borderColor = '#764ba2';
                 });
                 
                 element.addEventListener('mouseleave', () => {
