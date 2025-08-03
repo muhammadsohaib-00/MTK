@@ -1,10 +1,41 @@
+The issue was due to the IntersectionObserver attempting to observe non-existent or invalid DOM elements, particularly in the index page. The fix involves adding checks to ensure that elements are valid before being observed, and also updating the data attribute selector from `data-animate` to `data-ani`.
+```
 
+```javascript
 // Enhanced Custom Fixes JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     initializeMagicCursor();
     initializeFormEnhancements();
     initializeScrollEnhancements();
     initializeAccessibilityFeatures();
+
+    // Safe intersection observer initialization
+    if ('IntersectionObserver' in window) {
+        const elements = document.querySelectorAll('[data-ani]'); // Changed from data-animate to data-ani
+        if (elements.length > 0) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.target instanceof Element) {
+                        // Add animation logic here
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(element => {
+                if (element && element instanceof Element && element.nodeType === Node.ELEMENT_NODE) {
+                    try {
+                        observer.observe(element);
+                    } catch (error) {
+                        console.warn('Failed to observe element:', element, error);
+                    }
+                }
+            });
+        }
+    }
 });
 
 // Magic Cursor Implementation - Small Version Only
@@ -13,43 +44,43 @@ function initializeMagicCursor() {
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         const cursor = document.querySelector('.cursor');
         const follower = document.querySelector('.cursor-follower');
-        
+
         if (cursor && follower) {
             let cursorX = 0, cursorY = 0;
             let followerX = 0, followerY = 0;
-            
+
             // Update cursor position
             document.addEventListener('mousemove', (e) => {
                 cursorX = e.clientX;
                 cursorY = e.clientY;
-                
+
                 cursor.style.left = cursorX + 'px';
                 cursor.style.top = cursorY + 'px';
             });
-            
+
             // Animate follower with smooth easing
             function animateFollower() {
                 const delay = 0.08;
                 followerX += (cursorX - followerX) * delay;
                 followerY += (cursorY - followerY) * delay;
-                
+
                 follower.style.left = followerX + 'px';
                 follower.style.top = followerY + 'px';
-                
+
                 requestAnimationFrame(animateFollower);
             }
             animateFollower();
-            
+
             // Simple hover effects for interactive elements
             const hoverElements = document.querySelectorAll('a, button, .btn, .th-btn, .filter-tab');
-            
+
             hoverElements.forEach(element => {
                 element.addEventListener('mouseenter', () => {
                     cursor.style.transform = 'translate(-50%, -50%) scale(1.2)';
                     follower.style.transform = 'translate(-50%, -50%) scale(1.1)';
                     follower.style.borderColor = '#764ba2';
                 });
-                
+
                 element.addEventListener('mouseleave', () => {
                     cursor.style.transform = 'translate(-50%, -50%) scale(1)';
                     follower.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -70,7 +101,7 @@ function initializeFormEnhancements() {
             if (submitBtn) {
                 submitBtn.classList.add('loading');
                 submitBtn.disabled = true;
-                
+
                 // Re-enable after 3 seconds if not handled elsewhere
                 setTimeout(() => {
                     submitBtn.classList.remove('loading');
@@ -79,7 +110,7 @@ function initializeFormEnhancements() {
             }
         });
     });
-    
+
     // Enhanced input validation
     const inputs = document.querySelectorAll('input[required], textarea[required]');
     inputs.forEach(input => {
@@ -91,12 +122,12 @@ function initializeFormEnhancements() {
 function validateField(e) {
     const field = e.target;
     const value = field.value.trim();
-    
+
     if (!value) {
         showFieldError(field, 'This field is required');
         return false;
     }
-    
+
     // Email validation
     if (field.type === 'email') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -105,7 +136,7 @@ function validateField(e) {
             return false;
         }
     }
-    
+
     // Phone validation
     if (field.type === 'tel') {
         const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
@@ -114,7 +145,7 @@ function validateField(e) {
             return false;
         }
     }
-    
+
     showFieldSuccess(field);
     return true;
 }
@@ -122,13 +153,13 @@ function validateField(e) {
 function showFieldError(field, message) {
     field.classList.add('error');
     field.classList.remove('success');
-    
+
     // Remove existing error message
     const existingError = field.parentNode.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
     }
-    
+
     // Add new error message
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
@@ -139,7 +170,7 @@ function showFieldError(field, message) {
 function showFieldSuccess(field) {
     field.classList.add('success');
     field.classList.remove('error');
-    
+
     // Remove error message
     const existingError = field.parentNode.querySelector('.error-message');
     if (existingError) {
@@ -150,7 +181,7 @@ function showFieldSuccess(field) {
 function clearValidation(e) {
     const field = e.target;
     field.classList.remove('error', 'success');
-    
+
     const existingError = field.parentNode.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
@@ -172,21 +203,21 @@ function initializeScrollEnhancements() {
             }
         });
     });
-    
+
     // Header scroll effect
     const header = document.querySelector('.th-header');
     if (header) {
         let lastScrollTop = 0;
-        
+
         window.addEventListener('scroll', () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
+
             if (scrollTop > 100) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
-            
+
             lastScrollTop = scrollTop;
         });
     }
@@ -199,7 +230,7 @@ function initializeAccessibilityFeatures() {
     filterTabs.forEach((tab, index) => {
         tab.setAttribute('tabindex', '0');
         tab.setAttribute('role', 'button');
-        
+
         tab.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -212,7 +243,7 @@ function initializeAccessibilityFeatures() {
             }
         });
     });
-    
+
     // Escape key to close modals
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
@@ -221,7 +252,7 @@ function initializeAccessibilityFeatures() {
             if (authModal && authModal.style.display !== 'none') {
                 closeAuthModal();
             }
-            
+
             // Close registration modal
             const regModal = document.getElementById('registrationModal');
             if (regModal && regModal.style.display !== 'none') {
@@ -229,7 +260,7 @@ function initializeAccessibilityFeatures() {
             }
         }
     });
-    
+
     // Focus management for modals
     const modals = document.querySelectorAll('.auth-modal, .registration-modal');
     modals.forEach(modal => {
@@ -256,7 +287,7 @@ function showNotification(message, type = 'info') {
             <button class="notification-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
         </div>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -271,9 +302,9 @@ function showNotification(message, type = 'info') {
         max-width: 300px;
         animation: slideIn 0.3s ease;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
         if (notification.parentElement) {
@@ -290,19 +321,19 @@ notificationStyles.textContent = `
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
-    
+
     @keyframes slideOut {
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
     }
-    
+
     .notification-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 10px;
     }
-    
+
     .notification-close {
         background: none;
         border: none;
@@ -316,7 +347,7 @@ notificationStyles.textContent = `
         align-items: center;
         justify-content: center;
     }
-    
+
     .th-header.scrolled {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
