@@ -975,49 +975,48 @@
     const follower = document.querySelector(".cursor-follower");
     const gsapCursor = document.querySelectorAll(".gsap-cursor");
 
-    let posX = 0,
-        posY = 0,
-        mouseX = 0,
-        mouseY = 0; 
+    if (cursor && follower && typeof gsap !== 'undefined') {
+        let posX = 0,
+            posY = 0,
+            mouseX = 0,
+            mouseY = 0; 
 
-    TweenMax.to({}, 0.02, {
-        repeat: -1,
-        onRepeat: function () {
-            posX += (mouseX - posX) /9;
+        gsap.to({}, {duration: 0.02, repeat: -1, onRepeat: function () {
+            posX += (mouseX - posX) / 9;
             posY += (mouseY - posY) / 9;
 
-            TweenMax.set(follower, {
+            gsap.set(follower, {
                 css: {
                     left: posX - 20,
                     top: posY - 20
                 }
             });
 
-            TweenMax.set(cursor, {
+            gsap.set(cursor, {
                 css: {
                     left: mouseX,
                     top: mouseY
                 }
             });
-        }
-    });
+        }});
 
-    document.addEventListener("mousemove", (e) => {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-    });
-
-    gsapCursor.forEach((el) => {
-        el.addEventListener("mouseenter", () => {
-            cursor.classList.add("active");
-            follower.classList.add("active");
+        document.addEventListener("mousemove", (e) => {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
         });
 
-        el.addEventListener("mouseleave", () => {
-            cursor.classList.remove("active");
-            follower.classList.remove("active");
+        gsapCursor.forEach((el) => {
+            el.addEventListener("mouseenter", () => {
+                cursor.classList.add("active");
+                follower.classList.add("active");
+            });
+
+            el.addEventListener("mouseleave", () => {
+                cursor.classList.remove("active");
+                follower.classList.remove("active");
+            });
         });
-    });
+    }
     /* cursor area end */
 
     /*---------- 12. Section Position ----------*/
@@ -1310,18 +1309,20 @@ $(function () {
 })
 
   /*----------- 21. Price Slider ----------*/
-  $(".price_slider").slider({
-    range: true,
-    min: 0,
-    max: 100,
-    values: [0, 30],
-    slide: function (event, ui) {
-        $(".from").text("$" + ui.values[0]);
-        $(".to").text("$" + ui.values[1]);
-    }
-});
-$(".from").text("$" + $(".price_slider").slider("values", 0));
-$(".to").text("$" + $(".price_slider").slider("values", 1));
+  if (typeof $.fn.slider !== 'undefined' && $(".price_slider").length > 0) {
+    $(".price_slider").slider({
+        range: true,
+        min: 0,
+        max: 100,
+        values: [0, 30],
+        slide: function (event, ui) {
+            $(".from").text("$" + ui.values[0]);
+            $(".to").text("$" + ui.values[1]);
+        }
+    });
+    $(".from").text("$" + $(".price_slider").slider("values", 0));
+    $(".to").text("$" + $(".price_slider").slider("values", 1));
+  }
 
 
 // (function ($) {
