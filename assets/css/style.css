@@ -2849,26 +2849,27 @@ hr.title-line {
 }
 
 .cursor {
-  position: absolute;
-  background: transparent;
+  position: fixed;
+  background: #667eea;
   cursor: pointer;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
+  width: 8px;
+  height: 8px;
+  line-height: 8px;
   border-radius: 100%;
   z-index: 9999999;
-  -webkit-transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) -webkit-transform;
-  transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) -webkit-transform;
-  transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity;
-  transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) -webkit-transform;
+  -webkit-transition: 0.15s ease-out opacity, 0.15s ease-out -webkit-transform;
+  transition: 0.15s ease-out opacity, 0.15s ease-out -webkit-transform;
+  transition: 0.15s ease-out transform, 0.15s ease-out opacity;
+  transition: 0.15s ease-out transform, 0.15s ease-out opacity, 0.15s ease-out -webkit-transform;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
   pointer-events: none;
-  -webkit-transform: scale(0.8);
-      -ms-transform: scale(0.8);
-          transform: scale(0.8);
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
 }
 
 .cursor:before {
@@ -2921,24 +2922,20 @@ hr.title-line {
 }
 
 .cursor-follower {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 100%;
-  z-index: 99999999;
-  background-color: var(--theme-color);
-  -webkit-transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) background, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) -webkit-transform;
-  transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) background, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) -webkit-transform;
-  transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) background;
-  transition: 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) transform, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) opacity, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) background, 0.5s cubic-bezier(0.75, -1.27, 0.3, 2.33) -webkit-transform;
+  position: fixed;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #667eea;
+  border-radius: 50%;
+  z-index: 999998;
+  pointer-events: none;
+  transition: transform 0.15s ease-out, border-color 0.15s ease-out, opacity 0.15s ease-out;
+  transform: translate(-50%, -50%);
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  pointer-events: none;
-  -webkit-transform: translate(8px, 8px);
-      -ms-transform: translate(8px, 8px);
-          transform: translate(8px, 8px);
 }
 
 .cursor-follower.active {
@@ -2946,6 +2943,13 @@ hr.title-line {
   -webkit-transform: scale(0);
       -ms-transform: scale(0);
           transform: scale(0);
+}
+
+/* Hide default cursor on desktop */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
 }
 
 /* cursor area end ---------------------------*/

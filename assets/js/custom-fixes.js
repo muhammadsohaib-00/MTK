@@ -36,16 +36,23 @@ function initializeMagicCursor() {
         const follower = document.querySelector('.cursor-follower');
 
         if (cursor && follower) {
+            // Make cursors visible
+            cursor.style.display = 'block';
+            cursor.style.opacity = '1';
+            follower.style.display = 'block';
+            follower.style.opacity = '1';
+
             let cursorX = 0, cursorY = 0;
             let followerX = 0, followerY = 0;
 
-            // Update cursor position
+            // Update cursor position - use pageX/pageY for scroll support
             document.addEventListener('mousemove', (e) => {
-                cursorX = e.clientX;
-                cursorY = e.clientY;
+                cursorX = e.pageX;
+                cursorY = e.pageY;
 
                 cursor.style.left = cursorX + 'px';
                 cursor.style.top = cursorY + 'px';
+                cursor.style.transform = 'translate(-50%, -50%)';
             });
 
             // Animate follower with smooth easing
@@ -56,13 +63,14 @@ function initializeMagicCursor() {
 
                 follower.style.left = followerX + 'px';
                 follower.style.top = followerY + 'px';
+                follower.style.transform = 'translate(-50%, -50%)';
 
                 requestAnimationFrame(animateFollower);
             }
             animateFollower();
 
             // Simple hover effects for interactive elements
-            const hoverElements = document.querySelectorAll('a, button, .btn, .th-btn, .filter-tab');
+            const hoverElements = document.querySelectorAll('a, button, .btn, .th-btn, .filter-tab, .swiper-slide, .gallery-card, .team-box, .tour-box');
 
             hoverElements.forEach(element => {
                 element.addEventListener('mouseenter', () => {
@@ -76,6 +84,21 @@ function initializeMagicCursor() {
                     follower.style.transform = 'translate(-50%, -50%) scale(1)';
                     follower.style.borderColor = '#667eea';
                 });
+            });
+
+            // Hide default cursor on body
+            document.body.style.cursor = 'none';
+            
+            // Show custom cursor on mouse enter
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '1';
+                follower.style.opacity = '1';
+            });
+
+            // Hide custom cursor on mouse leave
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+                follower.style.opacity = '0';
             });
         }
     }
