@@ -4,6 +4,8 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const path = require('path');
+const nodemailer = require("nodemailer");
+const cors = require("cors");
 
 const app = express();
 const PORT = 5000;
@@ -380,6 +382,37 @@ app.get('/api/admin/check', async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post("/send-mail", async (req, res) => {
+    const { name, email, subject, message } = req.body;
+
+    const transporter = nodemailer.createTransport({
+        service: "Gmail", // or use SMTP settings
+        auth: {
+            user: "info.mtk01@gmail.com",
+            pass: "talodwijoqisrydm",
+        },
+    });
+
+    const mailOptions = {
+        from: `"${name}" <${email}>`,
+        to: "info.mtk01@gmail.com", 
+        subject: subject,
+        text: message,
+        html: `<p><strong>Name:</strong> ${name}</p>
+               <p><strong>Email:</strong> ${email}</p>
+               <p><strong>Subject:</strong> ${subject}</p>
+               <p><strong>Message:</strong><br>${message}</p>`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "Email sent successfully" });
+    } catch (error) {
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Failed to send email" });
     }
 });
 
