@@ -275,6 +275,17 @@
     background-clip: text;
 }
 
+/* Disable magic cursor across entire website */
+.magic-cursor,
+.cursor,
+.cursor-follower,
+.mouse-pointer {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 /* Enhanced mobile responsiveness */
 @media (max-width: 768px) {
     .categorySlider .swiper-slide {
