@@ -1,0 +1,153 @@
+
+/* MTK Custom Colorful Theme Enhancements */
+
+/* Bounce animation for emojis */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Enhanced category slider centering */
+.categorySlider {
+    overflow: visible !important;
+}
+
+.categorySlider .swiper-wrapper {
+    align-items: center;
+    justify-content: center;
+}
+
+.categorySlider .swiper-slide {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Colorful hover effects */
+.category-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Enhanced button styles */
+.th-btn {
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.th-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
+}
+
+/* Colorful social media buttons */
+.th-social a:hover {
+    transform: scale(1.1) rotate(5deg);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Enhanced card shadows and hover effects */
+.tour-box:hover,
+.testi-card:hover,
+.th-team:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Colorful pagination bullets */
+.swiper-pagination-bullet {
+    background: linear-gradient(45deg, #FF6B9D, #4ECDC4) !important;
+    opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+    opacity: 1 !important;
+    transform: scale(1.2);
+}
+
+/* Enhanced gallery images */
+.gallery-card img {
+    transition: all 0.3s ease-in-out;
+}
+
+.gallery-card:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.1) saturate(1.2);
+}
+
+/* Colorful counter cards */
+.counter-card {
+    background: rgba(255,255,255,0.9) !important;
+    border-radius: 20px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.counter-card:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 3px;
+    background: linear-gradient(45deg, #FF6B9D, #4ECDC4, #45B7D1, #96CEB4);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: subtract;
+    z-index: -1;
+}
+
+/* Enhanced team member cards */
+.th-team {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 3px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(45deg, #FF6B9D, #4ECDC4) border-box;
+}
+
+/* Testimonial card enhancements */
+.testi-card {
+    background: rgba(255,255,255,0.95) !important;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* Hero section button enhancements */
+.hero-style1 .th-btn {
+    background: linear-gradient(45deg, #FF6B9D, #4ECDC4);
+    border: 2px solid white;
+    color: white;
+    font-weight: 600;
+}
+
+/* Mobile responsiveness for colorful elements */
+@media (max-width: 768px) {
+    .title-area,
+    .about-area .ps-xl-4 {
+        padding: 20px !important;
+    }
+    
+    .sub-title {
+        font-size: 20px !important;
+    }
+    
+    .sec-title {
+        font-size: 28px !important;
+    }
+}
+
+/* Fix for intersection observer error */
+.swiper-slide {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
