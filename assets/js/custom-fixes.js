@@ -497,22 +497,60 @@
     <script src="assets/js/mixitup.min.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <!-- Custom JavaScript fixes for MTK website -->
-
-    <!-- Fix video playback issues -->
+    <!-- Custom JavaScript enhancements -->
     <script>
+        // MTK Custom JavaScript Enhancements
+
         document.addEventListener('DOMContentLoaded', function() {
 
             // Fix category slider centering
             setTimeout(function() {
-                const categorySlider = document.querySelector('.categorySlider .swiper');
+                const categorySlider = document.getElementById('categorySlide');
                 if (categorySlider && categorySlider.swiper) {
+                    // Initialize slider to start from center
+                    categorySlider.swiper.slideTo(2, 0); // Start from 3rd slide (center)
                     categorySlider.swiper.update();
-                    categorySlider.swiper.slideTo(2, 0); // Start from center slide
+
+                    // Force center alignment
+                    const swiperWrapper = categorySlider.querySelector('.swiper-wrapper');
+                    if (swiperWrapper) {
+                        swiperWrapper.style.justifyContent = 'center';
+                        swiperWrapper.style.alignItems = 'center';
+                    }
                 }
             }, 1000);
 
-            // Initialize colorful animations
+            // Add colorful hover animations
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.05)';
+                    this.style.boxShadow = '0 15px 35px rgba(255, 107, 157, 0.3)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+
+            // Add bounce animation to buttons
+            const buttons = document.querySelectorAll('.th-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px) scale(1.05)';
+                    this.style.filter = 'brightness(1.1)';
+                });
+
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.filter = 'brightness(1)';
+                });
+            });
+
+            // Colorful section animations
+            const colorfulSections = document.querySelectorAll('.category-area, .about-area, .gallery-area, .testi-area, .counter-area');
+
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -523,19 +561,61 @@
                     if (entry.isIntersecting && entry.target instanceof Element) {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('animate-in');
                     }
                 });
             }, observerOptions);
 
-            // Observe colorful sections
-            const colorfulSections = document.querySelectorAll('.category-area, .about-area, .gallery-area, .testi-area, .counter-area');
             colorfulSections.forEach(section => {
                 if (section instanceof Element) {
                     observer.observe(section);
                 }
             });
+
+            // Initialize videos with better playback
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.muted = true;
+                video.playsInline = true;
+                video.autoplay = true;
+                video.loop = true;
+
+                // Ensure video plays
+                const playVideo = () => {
+                    video.play().catch(e => console.log('Video autoplay prevented'));
+                };
+
+                if (video.readyState >= 2) {
+                    playVideo();
+                } else {
+                    video.addEventListener('loadeddata', playVideo);
+                }
+            });
         });
     </script>
+    <style>
+        /* CSS animations for sections */
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Fix for intersection observer error */
+        .swiper-slide {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
 </body>
 
 </html>
