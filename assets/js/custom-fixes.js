@@ -22,27 +22,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fix IntersectionObserver errors by checking element validity
     function safeIntersectionObserver() {
-        const elements = document.querySelectorAll('[data-aos], .animate-on-scroll, .fade-in');
-        if (elements.length === 0) return;
+        try {
+            const elements = document.querySelectorAll('[data-aos], .animate-on-scroll, .fade-in');
+            if (elements.length === 0) return;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.target && entry.target.nodeType === 1) { // Check if element is valid
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.target && 
+                        entry.target instanceof Element && 
+                        entry.target.nodeType === Node.ELEMENT_NODE &&
+                        document.body.contains(entry.target)) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate');
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(element => {
+                if (element && 
+                    element instanceof Element && 
+                    element.nodeType === Node.ELEMENT_NODE &&
+                    document.body.contains(element)) {
+                    try {
+                        observer.observe(element);
+                    } catch (e) {
+                        console.warn('Failed to observe element:', e);
                     }
                 }
             });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        elements.forEach(element => {
-            if (element && element.nodeType === 1) { // Only observe valid elements
-                observer.observe(element);
-            }
-        });
+        } catch (error) {
+            console.warn('IntersectionObserver initialization failed:', error);
+        }
     }
 
     // Enhanced category slider initialization
@@ -106,18 +120,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Fix any jQuery slider errors
-    if (typeof $ !== 'undefined') {
+    if (typeof $ !== 'undefined' && $.fn) {
         // Ensure jQuery slider functions exist before calling
-        $('[data-slider]').each(function() {
-            const $this = $(this);
-            if (typeof $this.slider === 'function') {
-                try {
-                    $this.slider();
-                } catch (e) {
-                    console.warn('Slider initialization failed:', e);
+        try {
+            $('[data-slider]').each(function() {
+                const $this = $(this);
+                if ($this.length && typeof $this.slider === 'function') {
+                    try {
+                        $this.slider();
+                    } catch (e) {
+                        console.warn('Slider initialization failed:', e);
+                    }
+                } else {
+                    console.warn('Slider function not available for element:', this);
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.warn('jQuery slider initialization failed:', error);
+        }
     }
 });
 
@@ -189,32 +209,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add colorful scroll animations
     function addScrollAnimations() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+        try {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.target && 
+                        entry.target instanceof Element && 
+                        document.body.contains(entry.target) &&
+                        entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            // Observe elements for animation with proper validation
+            const animateElements = document.querySelectorAll('.category-card, .counter-card, .th-team, .testi-card, .gallery-card, .mtk-program-card');
+            animateElements.forEach(el => {
+                if (el && 
+                    el instanceof Element && 
+                    el.nodeType === Node.ELEMENT_NODE &&
+                    document.body.contains(el)) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(30px)';
+                    el.style.transition = 'all 0.6s ease';
+                    try {
+                        observer.observe(el);
+                    } catch (error) {
+                        console.warn('Failed to observe element:', error);
+                    }
                 }
             });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        // Observe elements for animation with proper validation
-        const animateElements = document.querySelectorAll('.category-card, .counter-card, .th-team, .testi-card, .gallery-card');
-        animateElements.forEach(el => {
-            if (el && el instanceof Element && el.nodeType === Node.ELEMENT_NODE) {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'all 0.6s ease';
-                try {
-                    observer.observe(el);
-                } catch (error) {
-                    console.warn('Failed to observe element:', el, error);
-                }
-            }
-        });
+        } catch (error) {
+            console.warn('Scroll animation initialization failed:', error);
+        }
     }
 
     // Add rainbow text effect to titles

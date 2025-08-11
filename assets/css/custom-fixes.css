@@ -626,6 +626,47 @@
     50% { border-color: var(--mtk-primary); }
 }
 
+/* MTK Program Card Styles */
+.mtk-program-card:hover .program-img img {
+    transform: scale(1.05);
+}
+
+.mtk-program-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+}
+
+.program-title a {
+    text-decoration: none;
+    color: var(--mtk-primary);
+    transition: color 0.3s ease;
+}
+
+.program-title a:hover {
+    color: var(--mtk-secondary);
+}
+
+/* Fix about section image box positioning */
+.img-box3 {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-box3 .img1, .img-box3 .img2, .img-box3 .img3 {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.img-box3 .img1:hover, .img-box3 .img2:hover, .img-box3 .img3:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
 /* Enhanced mobile responsiveness */
 @media (max-width: 768px) {
     .categorySlider .swiper-slide {
@@ -660,6 +701,33 @@
 
     .particle-container {
         display: none; /* Disable particles on mobile for performance */
+    }
+
+    .img-box3 {
+        height: 400px !important;
+    }
+
+    .img-box3 .img1 {
+        width: 70% !important;
+        height: 250px !important;
+    }
+
+    .img-box3 .img2 {
+        width: 60% !important;
+        height: 220px !important;
+    }
+
+    .img-box3 .img3 {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .mtk-program-card {
+        height: 320px !important;
+    }
+
+    .program-content {
+        height: 120px !important;
     }
 }
 
