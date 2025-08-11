@@ -1,19 +1,160 @@
-
 // MTK Custom Fixes JavaScript
 // Colorful enhancements and cursor disabling
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Disable all cursor-related functionality
-    const cursors = document.querySelectorAll('.magic-cursor, .cursor, .cursor-follower, .mouse-pointer');
+
+    // Fix magic cursor issues completely - remove all traces
+    // Remove any existing cursor elements
+    const cursors = document.querySelectorAll('.cursor, .cursor-follower, .magic-cursor, .mouse-pointer');
     cursors.forEach(cursor => {
         if (cursor) {
-            cursor.style.display = 'none';
-            cursor.style.visibility = 'hidden';
-            cursor.style.opacity = '0';
-            cursor.style.pointerEvents = 'none';
+            cursor.remove();
         }
     });
+
+    // Prevent any cursor scripts from running
+    if (window.magicCursor) {
+        window.magicCursor = null;
+    }
+
+    // Disable any cursor-related event listeners
+    document.body.style.cursor = 'default';
+
+    // Fix IntersectionObserver errors by checking element validity
+    function safeIntersectionObserver() {
+        const elements = document.querySelectorAll('[data-aos], .animate-on-scroll, .fade-in');
+        if (elements.length === 0) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.target && entry.target.nodeType === 1) { // Check if element is valid
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        elements.forEach(element => {
+            if (element && element.nodeType === 1) { // Only observe valid elements
+                observer.observe(element);
+            }
+        });
+    }
+
+    // Enhanced category slider initialization
+    // Initialize safe intersection observer
+    safeIntersectionObserver();
+
+    const categorySlider = document.querySelector('.categorySlider');
+    if (categorySlider && typeof Swiper !== 'undefined') {
+        // Destroy existing instance if any
+        if (categorySlider.swiper) {
+            categorySlider.swiper.destroy(true, true);
+        }
+
+        // Initialize with proper centering
+        new Swiper('.categorySlider', {
+            slidesPerView: 'auto',
+            spaceBetween: 30,
+            centeredSlides: true,
+            loop: false, // Disable loop to prevent centering issues
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                320: {
+                    slidesPerView: 1.2,
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                },
+                768: {
+                    slidesPerView: 2.5,
+                    spaceBetween: 25,
+                    centeredSlides: true,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    centeredSlides: true,
+                }
+            },
+            on: {
+                init: function() {
+                    // Force center alignment after initialization
+                    setTimeout(() => {
+                        this.update();
+                        // Start from middle slide
+                        const middleIndex = Math.floor(this.slides.length / 2);
+                        this.slideTo(middleIndex, 0);
+                    }, 100);
+                }
+            }
+        });
+    }
+
+    // Fix any jQuery slider errors
+    if (typeof $ !== 'undefined') {
+        // Ensure jQuery slider functions exist before calling
+        $('[data-slider]').each(function() {
+            const $this = $(this);
+            if (typeof $this.slider === 'function') {
+                try {
+                    $this.slider();
+                } catch (e) {
+                    console.warn('Slider initialization failed:', e);
+                }
+            }
+        });
+    }
+});
+
+// Add error handling for syntax errors in scripts
+window.addEventListener('error', function(e) {
+    if (e.message.includes('Unexpected token')) {
+        console.warn('Script syntax error caught and handled:', e.message);
+        return true; // Prevent error from breaking other scripts
+    }
+});
+
+// Prevent slider errors
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if required libraries are loaded
+    if (typeof Swiper === 'undefined') {
+        console.warn('Swiper library not loaded');
+        return;
+    }
+
+    // Initialize all sliders safely
+    const sliders = document.querySelectorAll('.swiper');
+    sliders.forEach(slider => {
+        if (slider && !slider.swiper) {
+            try {
+                new Swiper(slider, {
+                    slidesPerView: 'auto',
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    loop: false,
+                });
+            } catch (e) {
+                console.warn('Slider initialization failed for element:', slider, e);
+            }
+        }
+    });
+});
+
 
     // Enhanced category slider centering
     function initializeCategorySlider() {
@@ -273,7 +414,7 @@ function addAdvancedInteractivity() {
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
         const parallaxElements = document.querySelectorAll('.parallax-element');
-        
+
         parallaxElements.forEach(element => {
             const speed = element.getAttribute('data-speed') || 0.5;
             const yPos = -(scrolled * speed);
@@ -285,12 +426,12 @@ function addAdvancedInteractivity() {
     const cards = document.querySelectorAll('.category-card, .tour-box, .gallery-card');
     cards.forEach(card => {
         card.classList.add('interactive-card');
-        
+
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-15px) scale(1.03)';
             this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.2)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0) scale(1)';
             this.style.boxShadow = 'none';
@@ -299,7 +440,7 @@ function addAdvancedInteractivity() {
 
     // Add floating particles
     createFloatingParticles();
-    
+
     // Add text gradient effects to titles
     const titles = document.querySelectorAll('.sec-title, .hero-title');
     titles.forEach(title => {
@@ -319,9 +460,9 @@ function createFloatingParticles() {
         particle.style.backgroundColor = `var(--mtk-rainbow-${Math.floor(Math.random() * 7) + 1})`;
         particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
         particle.style.animationDelay = Math.random() * 2 + 's';
-        
+
         particleContainer.appendChild(particle);
-        
+
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.parentNode.removeChild(particle);
@@ -338,7 +479,7 @@ function enhanceLoadingExperience() {
     const preloader = document.getElementById('preloader');
     if (preloader) {
         preloader.style.background = 'linear-gradient(135deg, var(--mtk-primary), var(--mtk-secondary))';
-        
+
         // Add loading text animation
         const loadingText = preloader.querySelector('.txt-loading');
         if (loadingText) {
@@ -358,7 +499,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Smooth scroll enhancement
 function enhanceSmoothScroll() {
     document.documentElement.style.scrollBehavior = 'smooth';
-    
+
     // Add scroll progress indicator
     const progressBar = document.createElement('div');
     progressBar.style.cssText = `
@@ -380,4 +521,3 @@ function enhanceSmoothScroll() {
 }
 
 enhanceSmoothScroll();
-
