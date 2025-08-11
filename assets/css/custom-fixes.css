@@ -317,6 +317,7 @@
     background: linear-gradient(135deg, var(--mtk-accent) 0%, var(--mtk-warm) 100%);
     transition: left 0.3s ease;
     z-index: 0;
+    color:  white !important;
 }
 
 .th-btn.style3:hover::before {
@@ -473,8 +474,10 @@
 
 /* Hero section enhancements */
 .hero-title {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
+    color: white !important;
     animation: rainbow 4s ease-in-out infinite;
+
 }
 
 .sub-title {

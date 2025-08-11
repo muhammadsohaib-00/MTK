@@ -1948,13 +1948,14 @@ textarea.is-invalid {
 
 .th-btn.style3 {
   background-color: var(--title-color);
-  color: var(--white-color);
+  color: var(--white-color) !important;
   box-shadow: none;
   border: none;
 }
 
 .th-btn.style3:before {
   background-color: var(--theme-color);
+  color: var(--white-color)!important;
 }
 
 .th-btn.style4 {
