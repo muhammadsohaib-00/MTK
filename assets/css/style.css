@@ -196,7 +196,7 @@ th {
 }
 
 a {
-  color: var(--theme-color);
+  color: black !important;
   text-decoration: none;
   outline: 0;
   -webkit-transition: all ease 0.4s;
@@ -207,7 +207,19 @@ a:hover {
   color: var(--title-color);
 }
 
-
+.widget-area a,
+.widget-area p {
+    color: white !important; /* your desired color */
+}
+.copyright-wrap a {
+   color: white !important; 
+}
+.breadcumb-wrapper a {
+   color: white !important; 
+}
+.hero-style1 a {
+   color: white !important; 
+}
 a:active,
 a.nice-select.open,
 .currency-menu a.nice-select.open, a:focus, a:hover, a:visited {
@@ -2677,7 +2689,7 @@ hr.title-line {
   height: var(--icon-size, 32px);
   line-height: var(--icon-size, 32px);
   background-color: #E9F6F9;
-  color: var(--theme-color);
+  color: white;
   font-size: 16px;
   border-radius: 50%;
   text-align: center;
@@ -6356,7 +6368,7 @@ ol.wp-block-rss {
   padding: 0;
   margin-bottom: 21px;
   font-family: var(--body-font);
-  color: #888C97;
+  color: white;
   display: block;
   max-width: 100%;
   width: -webkit-max-content;
@@ -6454,7 +6466,7 @@ ol.wp-block-rss {
 }
 
 .th-widget-about .about-text {
-  color: #666666;
+  color: white;
   margin-bottom: 20px;
   margin-top: -0.5em;
 }
@@ -7729,6 +7741,7 @@ heding animation  end
 
 .info-box_text .details p {
   margin-bottom: 0;
+  color: white !important;
 }
 
 .info-box_text a {

@@ -2,7 +2,7 @@
 
 /* Enhanced MTK Color Variables */
 :root {
-    --mtk-primary: #FF6B9D;
+    --mtk-primary: #6ccc65;
     --mtk-secondary: #4ECDC4;
     --mtk-accent: #45B7D1;
     --mtk-warm: #FFB74D;
@@ -49,7 +49,7 @@
 }
 
 .mtk-colorful-footer {
-    background: linear-gradient(135deg, var(--mtk-primary) 0%, var(--mtk-secondary) 50%, var(--mtk-accent) 100%) !important;
+    background: #1CA8CB !important;
 }
 
 .mtk-newsletter {
@@ -242,7 +242,7 @@
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(135deg, var(--mtk-primary), var(--mtk-secondary), var(--mtk-accent), var(--mtk-warm));
+    background: #1CA8CB;
     border-radius: inherit;
     z-index: -1;
     opacity: 0;
@@ -274,7 +274,7 @@
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(135deg, var(--mtk-primary), var(--mtk-secondary), var(--mtk-accent), var(--mtk-warm));
+    background: #1CA8CB;
     border-radius: inherit;
     z-index: -1;
     opacity: 0;
@@ -292,7 +292,7 @@
 
 /* Colorful section titles */
 .sec-title {
-    background: linear-gradient(135deg, var(--mtk-primary), var(--mtk-secondary), var(--mtk-accent));
+    background: #6ccc65;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -301,7 +301,7 @@
 
 /* Colorful buttons */
 .th-btn.style3 {
-    background: linear-gradient(135deg, var(--mtk-primary) 0%, var(--mtk-secondary) 100%);
+    background: #4a8cce;
     border: none;
     position: relative;
     overflow: hidden;
@@ -314,9 +314,9 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--mtk-accent) 0%, var(--mtk-warm) 100%);
+    background: #4a8cce;
     transition: left 0.3s ease;
-    z-index: 0;
+    z-index: -1;
     color:  white !important;
 }
 
@@ -342,7 +342,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, var(--mtk-primary) 0%, var(--mtk-secondary) 25%, var(--mtk-accent) 50%, var(--mtk-warm) 75%, var(--mtk-purple) 100%);
+    background: #1CA8CB !important;
     background-size: 400% 400%;
     animation: gradient-shift 8s ease infinite;
     z-index: -1;
@@ -481,7 +481,7 @@
 }
 
 .sub-title {
-    background: linear-gradient(135deg, var(--mtk-warm), var(--mtk-green));
+    background: #4a8cce;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -832,5 +832,5 @@
 .breadcumb-title {
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    animation: rainbow 3s ease-in-out infinite;
+    
 }
